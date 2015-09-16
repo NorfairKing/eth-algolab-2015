@@ -1,7 +1,10 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
-double solve(std::vector<double> bits);
+#define BASE 10
+
+double solve(std::vector<double> nums);
 
 int main() {
   int cases;
@@ -19,14 +22,30 @@ int main() {
   }
 }
 
-// Just sum all the numbers?
+bool is_int(double n) {
+  double intpart;
+  return std::modf(n, &intpart) == 0.0;
+}
+
+// Bring numbers into an integer representation first, sum them and then bring
+// them back to a double.
 double solve(std::vector<double> nums) {
   int n = nums.size();
 
-  double sum;
+  int maxepower = 1;
   for (int i = 0; i < n; ++i) {
-    sum += nums[i];
+    while(!is_int(nums[i] * pow(BASE, maxepower))) { maxepower++; }
   }
 
-  return sum;
+  std::vector<int> pieces(n);
+  for (int i = 0; i < n; ++i) {
+    pieces[i] = nums[i] * pow(BASE, maxepower);
+  }
+
+  int sum = 0;
+  for (int i = 0; i < n; ++i) {
+    sum += pieces[i];
+  }
+
+  return sum / pow(BASE, maxepower);
 }
