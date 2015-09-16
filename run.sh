@@ -15,7 +15,7 @@ echo "Making..."
 make --makefile ${MAKEFILE}
 echo
 
-echo "Running..."
+echo -n "Running..."
 time ./${EXECUTABLE} < ${INPUT_FILE} > ${TMP_OUTPUT}
 echo
 
