@@ -22,17 +22,15 @@ inline bool even(int n) {
 }
 
 // Go over every pair i,j; compute the sum of the numbers between i and j
-// check whether it's even every time.
+// by adding the jth number for every j and check whether it's even every time.
 int solve(std::vector<int> bits) {
   int n = bits.size();
 
   int even_count = 0;
   for (int i = 0; i < n; ++i) {
+    int sum = 0;
     for (int j = i; j < n; ++j) {
-      int sum = 0;
-      for (int k = i; k <= j; ++k) {
-        sum += bits[k];
-      }
+      sum += bits[j];
       if (even(sum)) { ++even_count; }
     }
   }
