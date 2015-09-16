@@ -6,7 +6,6 @@ int solve(std::vector<int> bits);
 int main() {
   int n;
   std::cin >> n;
-  std::cout << n << std::endl;
 
   std::vector<int> bits;
   int bit;
@@ -14,10 +13,29 @@ int main() {
     std::cin >> bit;
     bits.push_back(bit);
   }
+
+  std::cout << solve(bits) << std::endl;
 }
 
+inline bool even(int n) {
+  return (n & 1) ^ 1; // The last bit of n must be 0.
+}
+
+// Go over every pair i,j; compute the sum of the numbers between i and j
+// check whether it's even every time.
 int solve(std::vector<int> bits) {
+  int n = bits.size();
 
+  int even_count = 0;
+  for (int i = 0; i < n; ++i) {
+    for (int j = i; j < n; ++j) {
+      int sum = 0;
+      for (int k = i; k <= j; ++k) {
+        sum += bits[k];
+      }
+      if (even(sum)) { ++even_count; }
+    }
+  }
 
-  return 4;
+  return even_count;
 }
