@@ -2,10 +2,14 @@
 INPUT_FILE='input.txt'
 OUTPUT_FILE='output.txt'
 
-MAKEFILE='../build/makefile'
+MAKEFILE='../makefile'
+
 EXECUTABLE='main.bin'
 
 TMP_OUTPUT='/tmp/output.txt'
+
+# Make sure the script exist if anything goes wrong
+set -e 
 
 echo "Making..."
 make --makefile ${MAKEFILE}
@@ -16,4 +20,8 @@ time ./${EXECUTABLE} < ${INPUT_FILE} > ${TMP_OUTPUT}
 echo
 
 echo "Diff:"
-diff ${OUTPUT_FILE} ${TMP_OUTPUT}
+diff ${OUTPUT_FILE} ${TMP_OUTPUT} 
+
+if [[ "$?" == "0" ]]; then
+  echo "Nothing, Yay!"
+fi
