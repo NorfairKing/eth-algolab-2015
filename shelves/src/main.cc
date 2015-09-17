@@ -5,6 +5,8 @@
 void brute_force(long l, long m, long n);
 void smart(long l, long m, long n);
 
+// Try the O(l/n) algorithm if n is larger than sqrt(l), otherwise try the O(n) algorithm.
+// O(sqrt(l))
 int main() {
   std::ios_base::sync_with_stdio(false);
 
@@ -24,6 +26,8 @@ int main() {
   }
 }
 
+// Try out every possible b.
+// O(l/n)
 void brute_force(long l, long m, long n) {
   long e, a, b;
   e = l;
@@ -44,26 +48,32 @@ void brute_force(long l, long m, long n) {
   std::cout << a << " " << b << " " << e << std::endl;
 }
 
+// Precompute all the ways to exchange ms for ns and then try to get the smallest error.
+// O(n)
 void smart(long l, long m, long n) {
   long e, a, b;
   e = l;
   a = 0;
   b = 0;
+
   // min[i] holds the lowest number of m's that add up to a sum that is equivalent to i, mod n
+  // This ensures we always know how to fill the gap.
   long min[n];
-  for (int i = 0; i < n; ++i) { min[i] = -1; }
+  for (int i = 0; i < n; ++i) { min[i] = -1; } // Dummy value
   min[0] = 0;
   int at = 0;
   while(true) {
-    int next = (int) ((at + m) % n);
+    long next = (at + m) % n;
     if(min[next] != -1) { break; } // We have cycled around to a value we already found, so no point in adding m anymore.
     min[next] = min[at] + 1;
     at = next;
   }
 
+  // Try out every possible error from the bottom up
+  // This ensures that we get a minimal error.
   for (int left = 0; left < n; ++left) {
     // left is how many spaces we fail to fill
-    int totalUsed = (int)(l - left);
+    int totalUsed = l - left;
     // Take a bunch of m's to get a value equivalent to totalUsed mod n -> we want to take as few m's as possible.
     long countM = min[totalUsed % n];
     if (countM == -1 || countM * m > totalUsed) { continue; } // Such a value either cannot be reached or is not reached until after totalUsed.
