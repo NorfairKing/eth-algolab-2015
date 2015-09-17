@@ -1,6 +1,6 @@
 #!/bin/bash
-INPUT_FILE='input.txt'
-OUTPUT_FILE='output.txt'
+INPUT_FILE='sample.in'
+OUTPUT_FILE='sample.out'
 
 MAKEFILE='../makefile'
 
