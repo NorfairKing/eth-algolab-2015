@@ -21,7 +21,7 @@ CC_FLAGS = \
 SRC_DIR_NAME = src
 SRC_DIR = $(SRC_DIR_NAME)
 
-SRCS = $(wildcard $(SRC_DIR)/*.$(SRC_EXT))
+SRCS = $(wildcard *.$(SRC_EXT))
 OBJS = $(SRCS:.$(SRC_EXT)=.$(OBJ_EXT))
 
 MAIN_NAME = main
