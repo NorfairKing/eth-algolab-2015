@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <cmath>
 
 int gcd(int a, int b) {
   if (b == 0) { return a; }
@@ -12,24 +13,24 @@ int lcm(int a, int b) {
 
 class Solution {
   private:
-    int l;
-    int m;
-    int n;
-    int a;
-    int b;
+    long l;
+    long m;
+    long n;
+    long a;
+    long b;
   public:
-    Solution(int l, int m, int n);
+    Solution(long l, long m, long n);
     Solution(const Solution& that );
     ~Solution();
-    int getA();
-    int getB();
-    int getError();
+    long getA();
+    long getB();
+    long getError();
     void addA();
     void solve();
     friend std::ostream& operator << (std::ostream& out, Solution& board);
 };
 
-Solution::Solution(int l, int m, int n) {
+Solution::Solution(long l, long m, long n) {
   this->l = l;
   this->m = m;
   this->n = n;
@@ -47,15 +48,15 @@ Solution::Solution(const Solution& that) {
 
 Solution::~Solution() {}
 
-int Solution::getA() {
+long Solution::getA() {
   return this->a;
 }
 
-int Solution::getB() {
+long Solution::getB() {
   return this->b;
 }
 
-int Solution::getError() {
+long Solution::getError() {
   return l - a*m - b*n;
 }
 
@@ -63,6 +64,7 @@ void Solution::addA() {
   a++;
   while (getError() < 0) { b--; }
 }
+
 
 void Solution::solve() {
   b = l / n; // As many n's as possible
@@ -77,8 +79,8 @@ void Solution::solve() {
   Solution other(*this);
   for (int i = 0; i <= lm / m; ++i) { // There's no point in going past lm.
     other.addA();
-    if (other.getError() < this->getError()) { // < not <= because we want as many n's as possible.
-      //std::cout << "better" << std::endl;
+    if (other.getError() < bestSolution.getError()) { // < not <= because we want as many n's as possible.
+      //std::cout << "better: " << other.getError() << " i: " << i << "/" << lm/m << std::endl;
       bestSolution = other;
     } else {
       //std::cout << "not better" << std::endl;
@@ -102,7 +104,7 @@ int main() {
   int cases;
   std::cin >> cases;
   for (int c = 0; c < cases; ++c) {
-    int l, m, n;
+    long l, m, n;
     std::cin >> l;
     std::cin >> m;
     std::cin >> n;
