@@ -2,104 +2,6 @@
 #include <vector>
 #include <cmath>
 
-int gcd(int a, int b) {
-  if (b == 0) { return a; }
-  return gcd(b, a % b);
-}
-
-int lcm(int a, int b) {
-  return a * b / gcd(a, b);
-}
-
-class Solution {
-  private:
-    long l;
-    long m;
-    long n;
-    long a;
-    long b;
-  public:
-    Solution(long l, long m, long n);
-    Solution(const Solution& that );
-    ~Solution();
-    long getA();
-    long getB();
-    long getError();
-    bool addA();
-    void solve();
-    friend std::ostream& operator << (std::ostream& out, Solution& board);
-};
-
-Solution::Solution(long l, long m, long n) {
-  this->l = l;
-  this->m = m;
-  this->n = n;
-  a = 0;
-  b = 0;
-}
-
-Solution::Solution(const Solution& that) {
-  this->l = that.l;
-  this->m = that.m;
-  this->n = that.n;
-  this->a = that.a;
-  this->b = that.b;
-}
-
-Solution::~Solution() {}
-
-long Solution::getA() {
-  return this->a;
-}
-
-long Solution::getB() {
-  return this->b;
-}
-
-long Solution::getError() {
-  return l - a*m - b*n;
-}
-
-bool Solution::addA() {
-  a++;
-  while (getError() < 0) { b--; }
-  if (b < 0) { return false; }
-  return true;
-}
-
-
-void Solution::solve() {
-  b = l / n; // As many n's as possible
-  a = getError() / m; // Fill rest with m's
-
-  if (getError() == 0) { return; } 
-
-  int lm = lcm(m,n);
-  if (n % m == 0) { return; }
-
-  Solution bestSolution = *this;
-  Solution other(*this);
-  for (int i = 0; i <= lm / m; ++i) { // There's no point in going past lm.
-    if (!other.addA()) { break; } // Try and increment a
-    if (other.getError() < bestSolution.getError()) { // < not <= because we want as many n's as possible.
-      //std::cout << "better: " << other.getError() << " i: " << i << "/" << lm/m << std::endl;
-      bestSolution = other;
-    } else {
-      //std::cout << "not better" << std::endl;
-    }
-    if (bestSolution.getError() == 0) { break; }
-  }
-
-  this->a = bestSolution.getA();
-  this->b = bestSolution.getB();
-}
-
-std::ostream& operator << (std::ostream &out, Solution &sol) {
-  out << sol.a << " " << sol.b << " " << sol.getError() << std::endl;
-  return out;
-}
-
-
 int main() {
   std::ios_base::sync_with_stdio(false);
 
@@ -111,10 +13,48 @@ int main() {
     std::cin >> m;
     std::cin >> n;
 
-    Solution s(l,m,n);
-    s.solve();
-    std::cout << s;
-  }
-  return 0;
-}
+    long e, a, b;
+    e = l;
+    a = 0;
+    b = 0;
 
+    if (n * n > l) {
+      for(int i = 0; i * n <= l; ++i) {
+        // Place i shelves of length n.
+        long left = l - i * n;
+        long leftover = left % m;
+        long j = left / m;
+        if (leftover < e || (leftover == e && i > b)) {
+          e = leftover;
+          a = j;
+          b = i;
+        }
+      }
+    } else {
+      // min[i] holds the lowest number of m's that add up to a sum that is equivalent to i mod n
+      long min[n];
+      for (int i = 0; i < n; ++i) { min[i] = -1; }
+      min[0] = 0;
+      int at = 0;
+      while(true) {
+        int next = (int) ((at + m) % n);
+        if(min[next] != -1) { break; } // We have cycled around to a value we already found, so no point in adding m anymore.
+        min[next] = min[at] + 1;
+        at = next;
+      }
+      for (int left = 0; left < n; ++left) {
+        // left is how many spaces we fail to fill
+        int totalUsed = (int)(l - left);
+        // Take a bunch of m's to get a value equivalent to totalUsed mod n -> we want to take as few m's as possible.
+        long countM = min[totalUsed % n];
+        if (countM == -1 || countM * m > totalUsed) { continue; } // Such a value either cannot be reached or is not reached until after totalUsed.
+        long countN = (totalUsed - countM * m) / n;
+        e = left;
+        a = countM;
+        b = countN;
+        break; // All other possible solutions will have more leftover than this, so just break now.
+      }
+    }
+    std::cout << a << " " << b << " " << e << std::endl;
+  }
+}
