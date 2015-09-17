@@ -78,6 +78,8 @@ inline bool even(int n) {
 
 // Better solution: precompute sums
 // make an matrix sum where sum[i][j] contains the sum of all elements in the corner.
+// Define e[i][j] as the number of even sums below [i][j].
+//    
 int solve(Matrix& matrix) {
   int n = matrix.size();
   int even_counter = 0;
@@ -87,27 +89,109 @@ int solve(Matrix& matrix) {
     sum[ix][0] = 0;
     sum[0][ix] = 0;
   }
-  for (int i = 1; i <= n; ++i) {
-    for (int j = 1; j <= n; ++j) {
-      sum[i][j] = sum[i-1][j  ]
-                + sum[i  ][j-1]
-                - sum[i-1][j-1] // Counted doubly
-                + matrix.get(i-1, j-1);
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      sum[i+1][j+1] = sum[i  ][j+1]
+                    + sum[i+1][j  ]
+                    - sum[i  ][j  ] // Counted doubly
+                    + matrix.get(i, j);
     }
   }
 
-  for (int i1 = 0; i1 <= n; ++i1) {
-    for (int i2 = i1 + 1; i2 <= n; ++i2) {
-      for (int j1 = 0; j1 <= n; ++j1) {
-        for (int j2 = j1 + 1; j2 <= n; ++j2) {
-          
-          int s = 0;
-          s += sum[i2][j2];
-          s -= sum[i1][j2];
-          s -= sum[i2][j1];
-          s += sum[i1][j1];
+  int evens[n+1][n+1];
+  int odds[n+1][n+1];
+  for (int ix = 0; ix <= n; ++ix) {
+    evens[ix][0] = 0;
+    evens[0][ix] = 0;
+    odds[ix][0] = 0;
+    odds[0][ix] = 0;
+  }
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      evens[i+1][j+1] = evens[i  ][j+1]
+                      + evens[i+1][j  ]
+                      - evens[i  ][j  ] // Counted doubly
+                      + even(sum[i+1][j+1]);
+      odds[i+1][j+1]  = odds[i  ][j+1]
+                      + odds[i+1][j  ]
+                      - odds[i  ][j  ] // Counted doubly
+                      + !even(sum[i+1][j+1]);
+    }
+  }
 
-          if (even(s)) { ++even_counter; }
+  for (int i = 0; i < n; ++i) {
+    for (int j = 0; j < n; ++j) {
+      std::cout << matrix.get(i, j) << " ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+  for (int i = 0; i <= n; ++i) {
+    for (int j = 0; j <= n; ++j) {
+      std::cout << sum[i][j] << " ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+  for (int i = 0; i <= n; ++i) {
+    for (int j = 0; j <= n; ++j) {
+      std::cout << evens[i][j] << " ";
+    }
+    std::cout << std::endl;
+  }
+  for (int i = 0; i <= n; ++i) {
+    for (int j = 0; j <= n; ++j) {
+      std::cout << odds[i][j] << " ";
+    }
+    std::cout << std::endl;
+  }
+  std::cout << std::endl;
+
+
+
+  // In what conditions will s be even?
+  //
+  // s = s[i2][j2] - s[i1][j2] - s[i2][j1] + s[i1][j1]
+  //
+  // s[i2][j2] even, s[i1][j2] even:
+  //  s will be even iff both s[i2][j1] and s[i1][j1] are even.
+  //
+  // s[i2][j2] even, s[i1][j2] odd:
+  //  s will be even if one of s[i2][j1] and s[i1][j1] are even but not the other.
+  //
+  // s[i2][j2] odd, s[i1][j2] even:
+  //  s will be even if one of s[i2][j1] and s[i1][j1] are even but not the other.
+  //
+  // s[i2][j2] odd, s[i1][j2] odd:
+  //  s will be even if both s[i2][j1] and s[i1][j1] are odd.
+  //
+  // define e[i][j] as the number of even sums below [i][j].
+  //
+  // - if s[i2][j2] is even, count
+  for (int i2 = 0; i2 <= n; ++i2) {
+    for (int j2 = 0; j2 <= n; ++j2) {
+      for (int i1 = 0; i1 < i2; ++i1) {
+
+        //int l = i1*j2;
+        //int r = i2*j2;
+
+        if (even(sum[i2][j2])) {
+          if (even(sum[i1][j2])) {
+            even_counter += evens[i1][j2];
+            even_counter += evens[i2][j2];
+            even_counter -= odds[i1][j2];
+            even_counter -= odds[i2][j2];
+          } else {
+            even_counter += (evens[i1][j2] + odds[i2][j2]);
+            even_counter += (odds[i1][j2] + evens[i2][j2]);
+          }
+        } else {
+          if (even(sum[i1][j2])) {
+            even_counter += (evens[i1][j2] + odds[i2][j2]);
+            even_counter += (odds[i1][j2] + evens[i2][j2]);
+          } else {
+            even_counter += odds[i1][j2] + odds[i2][j2];
+          }
         }
       }
     }
