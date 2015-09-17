@@ -66,6 +66,7 @@ int main() {
         std::cin >> buf;
         matrix.set(x, y, buf);
       }
+      std::cin.get(); // get the newline
     }
     std::cout << solve(matrix) << std::endl;
   }
@@ -75,24 +76,38 @@ inline bool even(int n) {
   return (n & 1) ^ 1; // The last bit of n must be 0.
 }
 
-// Naive solution:
-// Try every quadruple.
+// Better solution: precompute sums
+// make an matrix sum where sum[i][j] contains the sum of all elements in the corner.
 int solve(Matrix& matrix) {
-
   int n = matrix.size();
   int even_counter = 0;
-  for (int i1 = 0; i1 < n; ++i1) {
-    for (int i2 = i1; i2 < n; ++i2) {
-      for (int j1 = 0; j1 < n; ++j1) {
-        for (int j2 = j1; j2 < n; ++j2) {
+
+  int sum[n+1][n+1];
+  for (int ix = 0; ix <= n; ++ix) {
+    sum[ix][0] = 0;
+    sum[0][ix] = 0;
+  }
+  for (int i = 1; i <= n; ++i) {
+    for (int j = 1; j <= n; ++j) {
+      sum[i][j] = sum[i-1][j  ]
+                + sum[i  ][j-1]
+                - sum[i-1][j-1] // Counted doubly
+                + matrix.get(i-1, j-1);
+    }
+  }
+
+  for (int i1 = 0; i1 <= n; ++i1) {
+    for (int i2 = i1 + 1; i2 <= n; ++i2) {
+      for (int j1 = 0; j1 <= n; ++j1) {
+        for (int j2 = j1 + 1; j2 <= n; ++j2) {
           
-          int sum = 0;
-          for (int i = i1; i <= i2; ++i) {
-            for (int j = j1; j <= j2; ++j) {
-              sum += matrix.get(i,j);
-            }
-          }
-          if (even(sum)) { ++even_counter; }
+          int s = 0;
+          s += sum[i2][j2];
+          s -= sum[i1][j2];
+          s -= sum[i2][j1];
+          s += sum[i1][j1];
+
+          if (even(s)) { ++even_counter; }
         }
       }
     }
