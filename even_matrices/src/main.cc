@@ -8,6 +8,7 @@ class Matrix {
   public:
     Matrix(int size);
     ~Matrix();
+    int size();
     int get(int ix);
     int get(int x, int y);
     void set(int ix, int m);
@@ -45,7 +46,11 @@ void Matrix::set(int x, int y, int m) {
   set(ix, m);
 }
 
-int solve(const Matrix& bits);
+int Matrix::size() {
+  return n;
+}
+
+int solve(Matrix& bits);
 
 int main() {
   int cases;
@@ -70,19 +75,28 @@ inline bool even(int n) {
   return (n & 1) ^ 1; // The last bit of n must be 0.
 }
 
-// Define s[i] as \sum_{i=0}^n bits[i]
-// For each couple i,j the sum of elements between i and j can be found by:
-// \sum_{n=i}^j bits[i] = s[j]-s[i]
-//
-// For a given j:
-// - if s[j] is even, s[j]-s[i] is only going to be even is s[i] is also even
-// - if s[j] is odd, s[j]-s[i] is only going to be even if s[i] is also odd
-//
-// Define e[j] as the number of even sums below j
-//
-// For a given j:
-// - if s[j] is even, count e[j] even sums.
-// - if s[j] is odd, count j-e[j] even sums.
-int solve(const Matrix& matrix) {
-  return 1;
+// Naive solution:
+// Try every quadruple.
+int solve(Matrix& matrix) {
+
+  int n = matrix.size();
+  int even_counter = 0;
+  for (int i1 = 0; i1 < n; ++i1) {
+    for (int i2 = i1; i2 < n; ++i2) {
+      for (int j1 = 0; j1 < n; ++j1) {
+        for (int j2 = j1; j2 < n; ++j2) {
+          
+          int sum = 0;
+          for (int i = i1; i <= i2; ++i) {
+            for (int j = j1; j <= j2; ++j) {
+              sum += matrix.get(i,j);
+            }
+          }
+          if (even(sum)) { ++even_counter; }
+        }
+      }
+    }
+  }
+
+  return even_counter;
 }
