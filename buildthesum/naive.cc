@@ -2,6 +2,7 @@
 #include <vector>
 #include <cmath>
 
+#define BASE 10
 
 double solve(std::vector<double> nums);
 
@@ -21,30 +22,18 @@ int main() {
   }
 }
 
-#define BASE 10
-
 bool is_int(double n) {
   double intpart;
   return std::modf(n, &intpart) == 0.0;
 }
 
+// Bring numbers into an integer representation first, sum them and then bring
+// them back to a double.
 double solve(std::vector<double> nums) {
   int n = nums.size();
-
-  int maxepower = 1;
+  double sum = 0;
   for (int i = 0; i < n; ++i) {
-    while(!is_int(nums[i] * pow(BASE, maxepower))) { maxepower++; }
+    sum += nums[i];
   }
-
-  int pieces[n];
-  for (int i = 0; i < n; ++i) {
-    pieces[i] = nums[i] * pow(BASE, maxepower);
-  }
-
-  int sum = 0;
-  for (int i = 0; i < n; ++i) {
-    sum += pieces[i];
-  }
-
-  return sum / pow(BASE, maxepower);
+  return sum;
 }

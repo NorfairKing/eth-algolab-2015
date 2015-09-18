@@ -1,0 +1,125 @@
+#!/bin/bash
+
+DEBUG="TRUE"
+WARNINGS="FALSE"
+
+
+# Make sure the script exist if anything goes wrong
+set -e 
+
+command="$1"
+arg="$2"
+
+manual () {
+  echo "
+  Algolab build system
+
+  Usage: algo COMMAND
+
+  Commands:
+    build:          Build the solution
+    run:            Run the solution
+    test:           Test the solution
+    publish:        Publish the solution's writeup
+    help:           Output this.
+  "
+}
+
+# ---[ Feedback ]------------------------------------------------------------ #
+
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;11m"
+COL_GREEN=$ESC_SEQ"32;11m"
+COL_YELLOW=$ESC_SEQ"33;11m"
+COL_BLUE=$ESC_SEQ"34;11m"
+COL_MAGENTA=$ESC_SEQ"35;11m"
+COL_CYAN=$ESC_SEQ"36;11m"
+print_colored_text () {
+    color=$1
+    text=$2
+    color_code="COL_$color"
+    if [ "$WARNINGS" == "TRUE" ]
+    then
+        echo -e "${!color_code}$text$COL_RESET"
+    else
+        echo "$text"
+    fi
+}
+
+debug () {
+    if [ "$DEBUG" == "TRUE" ]
+    then
+        print_colored_text GREEN "[DEBUG]: $*"
+    fi
+}
+
+warning () {
+    if [ "$WARNINGS" == "TRUE" ]
+    then
+        print_colored_text YELLOW "[WARNING]: $*"
+    fi
+}
+
+error () {
+    print_colored_text RED "[ERROR]: $*"
+    exit 1
+}
+
+# ---[ Feedback ]------------------------------------------------------------ #
+
+
+MAKEFILE='../makefile'
+EXECUTABLE='main.bin'
+if [[ "$arg" == "" ]]; then
+  executable="$EXECUTABLE"
+else
+  executable="$arg.bin"
+fi
+build () {
+  make --makefile ${MAKEFILE} ${executable}
+}
+
+run () {
+  build
+  time ./${executable} < ${INPUT_FILE} > ${TMP_OUTPUT}
+}
+
+INPUT_FILE='sample.in'
+OUTPUT_FILE='sample.out'
+TMP_OUTPUT='/tmp/output.txt'
+test_solution () {
+  run
+  echo
+  diff ${OUTPUT_FILE} ${TMP_OUTPUT} 
+  echo "Diff:"
+
+  if [[ "$?" == "0" ]]; then
+    echo "Nothing, Yay!"
+  fi
+}
+
+publish () {
+  make --makefile ${MAKEFILE} publish
+}
+
+case "$command" in
+  "build" )
+    build
+    ;;
+  "run" )
+    run
+    ;;
+  "test" )
+    test_solution
+    ;;
+  "publish" )
+    publish
+    ;;
+  "help" )
+    manual
+    ;;
+  * )
+    manual
+esac
+

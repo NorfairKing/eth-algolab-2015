@@ -1,0 +1,39 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{A naive solution}{\frac{l^2}{mn}}{1}
+    The naive solution is to go over every possible combination of short and long shelves and keep the one with the least amount of error.
+    \code{naive}{22}{37}
+  \end{solution}
+
+  \begin{solution}{A better solution}{\frac{l}{n}}{1}
+    Given an $b$, it is easy to see that we can calculate the maximum $a$ we can have.
+    This will give us the error $e$ as well.
+    This solution just goes over all possible $b$'s.
+    \code{better}{24}{40}
+  \end{solution}
+
+  \begin{solution}{A very clever trick}{\sqrt{l}}{\sqrt{l}}
+    The better solution is fine when $n$ is large but when $n$ is small it still takes time proportional to $l$.
+    Suppose we know that $n$ is small.
+    We can then do it faster.
+    \code{main}{46}{52}
+
+    The main problem is that we don't know how much of a gap we can fill by exchanging large shelves for small ones.
+    The first thing we will do is precalculate the minimum number of small shelves that remove a given gap.
+    In other words: $min[i]$ holds the lowest number of large shelves that add up to a sum that is equivalent to $i$, modulo $n$.
+    Because any modulo ring is cyclic, we know we can stop populating this array as soon as we visit a spot for the second time.
+    \code{main}{54}{65}
+
+    We then try every possible error, starting from zero, and check whether we can achieve that error.
+    This ensures that we get the lowest possible error.
+    We want to use as many large shelves as possible so we have to check how many small shelves we have to use.
+    When we use large shelves, the total will be a multiple of $n$.
+    We will fill up the rest (module $n$) with small shelves using the array we just precomputed.
+    \code{main}{67}{76}
+  \end{solution}
+\end{solutions}
+
+\end{document}

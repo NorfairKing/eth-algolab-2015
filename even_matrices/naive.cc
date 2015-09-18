@@ -51,35 +51,29 @@ int Matrix::size() {
 }
 
 inline bool even(int n) {
-  return !(n & 1);
-}
-
-// The evenpairs problem
-int onedevensums(std::vector<int> bits) {
-  int even = 1; // The first (empty) sum is even
-  int odd = 0;
-  int sum = 0;
-  int n = bits.size();
-  for (int i = 0; i < n; ++i) {
-    sum ^= bits[i];
-    if (sum == 0) { ++even; }
-    else { ++odd; }
-  }
-  return (even * (even - 1))/2 + (odd * (odd - 1))/2;
+  return !(n & 1); // The last bit of n must be 0.
 }
 
 int solve(Matrix& matrix) {
-  int n = matrix.size();
   int even_counter = 0;
-  for (int i = 0; i < n; ++i) {
-    std::vector<int> oneDim(n);
-    for (int j = i; j < n; ++j) {
-      for (int k = 0; k < n; ++k) {
-        oneDim[k] ^= matrix.get(j, k);
+  int n = matrix.size();
+
+  for (int i1 = 0; i1 < n; ++i1) {
+    for (int j1 = 0; j1 < n; ++j1) {
+      for (int i2 = i1; i2 < n; ++i2) {
+        for (int j2 = j1; j2 < n; ++j2) {
+          int sum = 0;
+          for (int ki = i1; ki <= i2; ++ki) {
+            for (int kj = j1; kj <= j2; ++kj) {
+              sum ^= matrix.get(ki, kj);
+            }
+          }
+          if (even(sum)) { ++even_counter; }
+        }
       }
-      even_counter += onedevensums(oneDim);
     }
   }
+
   return even_counter;
 }
 

@@ -1,5 +1,3 @@
-LANG = c++
-
 CC = g++
 
 SRC_EXT = cc
@@ -21,19 +19,31 @@ CC_FLAGS = \
 SRC_DIR_NAME = src
 SRC_DIR = $(SRC_DIR_NAME)
 
-SRCS = $(wildcard *.$(SRC_EXT))
-OBJS = $(SRCS:.$(SRC_EXT)=.$(OBJ_EXT))
+SOLUTIONS = $(wildcard *.$(SRC_EXT))
+SOLVERS = $(SOLUTIONS:.$(SRC_EXT)=.$(BIN_EXT))
 
 MAIN_NAME = main
 MAIN = $(MAIN_NAME).$(BIN_EXT)
 
-all: $(MAIN) 
+all: $(SOLVERS)
 
-%.bin : $(OBJS)
+%.$(BIN_EXT): %.$(OBJ_EXT)
 	$(CC) -o $@ $^  $(CC_FLAGS)
 
 %.$(OBJ_EXT): %.$(SRC_EXT)
 	$(CC) -o $@ -c $< $(CC_FLAGS)
+
+WRITEUP_SRC = writeup.tex
+WRITEUP_CLS = writeup.cls
+WRITEUP_OUT = writeup.pdf
+
+publish: $(WRITEUP_OUT)
+
+$(WRITEUP_CLS): ../$(WRITEUP_CLS)
+	cp ../$(WRITEUP_CLS) .
+
+$(WRITEUP_OUT): $(SOLUTIONS) $(WRITEUP_CLS) $(WRITEUP_SRC)
+	latexmk -pdf -pdflatex="pdflatex -shell-escape -halt-on-error -enable-write18" $(WRITEUP_SRC)
 
 
 DIRTY_EXT = *.$(OBJ_EXT) *.$(BIN_EXT)
