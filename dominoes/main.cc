@@ -25,12 +25,8 @@ int main() {
 // Go over all the dominoes until that counter and make them topple,
 // that means updating the counter to reflect the new last domino.
 int solve(std::vector<int> stones) {
-  int n = stones.size();
-
   int last = 0;
-  for (int i = 0; i < n; ++i) {
-    if (i > last) { return last + 1; }
-    last = std::max(i + stones[i] - 1, last);
-  }
-  return n;
+  int i = 0;
+  do { last = std::max(i + stones[i] - 1, last); } while (i++ < last);
+  return last + 1;
 }
