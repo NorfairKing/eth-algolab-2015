@@ -22,15 +22,23 @@
 \newcommand\code[3]{
   \begin{figure}[H]
   \centering
-  \inputminted[firstline=#2, lastline=#3]{c++}{#1.cc}
+  \begin{mdframed}
+    \inputminted[firstline=#2, lastline=#3]{c++}{#1.cc}
+  \end{mdframed}
   \end{figure}
 }
 
+% For frames
+\usepackage{mdframed}
+
 % Styles
 \newenvironment{solutions}{}{}
-\newenvironment{solution}[1]
+\newenvironment{solution}[3]
 {
   \section{#1}
+  \subsection*{Time: $O(#2)$, Space: $O(#3)$}
 }
 {
 }
+
+

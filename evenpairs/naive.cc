@@ -17,10 +17,6 @@ int main() {
   std::cout << solve(bits) << std::endl;
 }
 
-inline bool even(int n) {
-  return (n & 1) ^ 1; // The last bit of n must be 0.
-}
-
 // Brute force
 int solve(std::vector<int> bits) {
   int even_count = 0;
@@ -29,11 +25,9 @@ int solve(std::vector<int> bits) {
   for (int i = 0; i < n; ++i) {
     for (int j = i; j < n; ++j) {
       int sum = 0;
-
       for (int k = i; k <= j; ++k) {
         sum ^= bits[k];
       }
-
       if (!sum) { ++even_count; }
     }
   }

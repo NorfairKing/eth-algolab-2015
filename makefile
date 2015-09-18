@@ -42,7 +42,7 @@ publish: $(WRITEUP_OUT)
 $(WRITEUP_CLS): ../$(WRITEUP_CLS)
 	cp ../$(WRITEUP_CLS) .
 
-$(WRITEUP_OUT): $(WRITEUP_CLS) $(WRITEUP_SRC)
+$(WRITEUP_OUT): $(SOLUTIONS) $(WRITEUP_CLS) $(WRITEUP_SRC)
 	latexmk -pdf -pdflatex="pdflatex -shell-escape -halt-on-error -enable-write18" $(WRITEUP_SRC)
 
 

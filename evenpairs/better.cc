@@ -17,15 +17,18 @@ int main() {
   std::cout << solve(bits) << std::endl;
 }
 
+// Brute force
 int solve(std::vector<int> bits) {
-  int even = 1; // The first (empty) sum is even
-  int odd = 0;
-  int sum = 0;
+  int even_count = 0;
+
   int n = bits.size();
   for (int i = 0; i < n; ++i) {
-    sum ^= bits[i];
-    if (sum == 0) { ++even; }
-    else { ++odd; }
+    int sum = 0;
+    for (int j = i; j < n; ++j) {
+      sum ^= bits[j];
+      if (!sum) { ++even_count; }
+    }
   }
-  return (even * (even - 1))/2 + (odd * (odd - 1))/2;
+
+  return even_count;
 }

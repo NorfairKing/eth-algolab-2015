@@ -3,9 +3,47 @@
 \begin{document}
 
 \begin{solutions}
-  \begin{solution}{The naive solution}
+  \begin{solution}{The naive solution}{n^{3}}{1}
+    The naive solution is to check whether the sum of bits between $i$ and $j$ is even between all pairs $i$ and $j$.
+    Instead of summing the bits, we can XOR them with the sum and check whether the sum is $0$ in the end.
+    This speeds up the solution very slightly but it's still too slow.
+    \code{naive}{21}{36}
+  \end{solution}
 
-    \code{naive}{25}{42}
+  \begin{solution}{A better solution}{n^2}{1}
+    The sum of the bits between a pair $i$ and $j$ can be computed online.
+    That is, while looping over the pairs.
+    There is no need to have a third loop to compute the sum.
+    This saves us an entire order of magnitude.
+    \code{better}{21}{34}
+  \end{solution}
+
+  \begin{solution}{A dynamic programming solution}{n^2}{n}
+    The sum of bits between $i$ and $j$ could be computed if we had all the sums until a given $k$.
+    Denote $s[k]$ as the sum of the first $k$ bits.
+    We then find that the sum of bits between $i$ and $j$ is equal to $s[j] - s[i]$.
+    This is slightly faster though not asymptotically but it will prepare us for the next part.
+    \code{precomputed}{25}{41}
+  \end{solution}
+
+  \begin{solution}{A better dynamic programming solution}{n}{n}
+    To get an even faster solution, we have to go through all pairs $(i,j)$ without really going through all pairs individually.
+    It turns out that there is a way to find out how many sums will be even given just a $j$.
+    $s[j] - s[i]$ will be even if and only if either both $s[j]$ and $s[i]$ or they are both odd.
+    This means that, given a $j$, if $s[j]$ is even then there will be $e$ even sums where $e$ is the number of even sums below $j$.
+    If $j$ is odd then there will be $j-e$ (the others) even sums.
+    We can precompute this $e$ for the entire array of bits.
+    \code{dynamic}{37}{62}
+  \end{solution}
+
+  \begin{solution}{A sophisticated mathematical solution}{n}{1}
+    As it turns out we can get an even better solution (one that uses less memory) by using some clever combinatorics.
+    The first thing we need to see is that between two even sums, the sum of the bits is equal to $2$.
+    That means that between every pair of even bits, the sum will be even again.
+    The same holds for odd sums.
+    The amount of possible pairs in a set of $n$ number is exactly $\frac{n(n-1)}{2}$.
+    This means we only have to count the amount of even and the amount of odd sums and calculate this expression.
+    \code{main}{20}{31}
   \end{solution}
 \end{solutions}
 
