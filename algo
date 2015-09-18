@@ -3,14 +3,6 @@
 DEBUG="TRUE"
 WARNINGS="FALSE"
 
-INPUT_FILE='sample.in'
-OUTPUT_FILE='sample.out'
-
-MAKEFILE='../makefile'
-
-EXECUTABLE='main.bin'
-
-TMP_OUTPUT='/tmp/output.txt'
 
 # Make sure the script exist if anything goes wrong
 set -e 
@@ -78,15 +70,25 @@ error () {
 # ---[ Feedback ]------------------------------------------------------------ #
 
 
+MAKEFILE='../makefile'
+EXECUTABLE='main.bin'
+if [[ "$arg" == "" ]]; then
+  executable="$EXECUTABLE"
+else
+  executable="$arg.bin"
+fi
 build () {
-  make --makefile ${MAKEFILE}
+  make --makefile ${MAKEFILE} ${executable}
 }
 
 run () {
   build
-  time ./${EXECUTABLE} < ${INPUT_FILE} > ${TMP_OUTPUT}
+  time ./${executable} < ${INPUT_FILE} > ${TMP_OUTPUT}
 }
 
+INPUT_FILE='sample.in'
+OUTPUT_FILE='sample.out'
+TMP_OUTPUT='/tmp/output.txt'
 test_solution () {
   run
   echo
