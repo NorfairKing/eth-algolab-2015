@@ -1,5 +1,3 @@
-LANG = c++
-
 CC = g++
 
 SRC_EXT = cc
@@ -34,6 +32,18 @@ all: $(SOLVERS)
 
 %.$(OBJ_EXT): %.$(SRC_EXT)
 	$(CC) -o $@ -c $< $(CC_FLAGS)
+
+WRITEUP_SRC = writeup.tex
+WRITEUP_CLS = writeup.cls
+WRITEUP_OUT = writeup.pdf
+
+publish: $(WRITEUP_OUT)
+
+$(WRITEUP_CLS): ../$(WRITEUP_CLS)
+	cp ../$(WRITEUP_CLS) .
+
+$(WRITEUP_OUT): $(WRITEUP_CLS) $(WRITEUP_SRC)
+	latexmk -pdf -pdflatex="pdflatex -shell-escape -halt-on-error -enable-write18" $(WRITEUP_SRC)
 
 
 DIRTY_EXT = *.$(OBJ_EXT) *.$(BIN_EXT)
