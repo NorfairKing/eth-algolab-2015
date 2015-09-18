@@ -36,7 +36,7 @@
 \newenvironment{solution}[3]
 {
   \section{#1}
-  \subsection*{Time: $O(#2)$, Space: $O(#3)$}
+  \subsection*{Time: $O\left(#2\right)$, Space: $O\left(#3\right)$}
 }
 {
 }
