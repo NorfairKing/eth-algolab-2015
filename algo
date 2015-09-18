@@ -12,7 +12,6 @@ arg="$2"
 
 manual () {
   echo "
-
   Algolab build system
 
   Usage: algo COMMAND
