@@ -21,15 +21,15 @@ CC_FLAGS = \
 SRC_DIR_NAME = src
 SRC_DIR = $(SRC_DIR_NAME)
 
-SRCS = $(wildcard *.$(SRC_EXT))
-OBJS = $(SRCS:.$(SRC_EXT)=.$(OBJ_EXT))
+SOLUTIONS = $(wildcard *.$(SRC_EXT))
+SOLVERS = $(SOLUTIONS:.$(SRC_EXT)=.$(BIN_EXT))
 
 MAIN_NAME = main
 MAIN = $(MAIN_NAME).$(BIN_EXT)
 
-all: $(MAIN) 
+all: $(SOLVERS)
 
-%.bin : $(OBJS)
+%.$(BIN_EXT): %.$(OBJ_EXT)
 	$(CC) -o $@ $^  $(CC_FLAGS)
 
 %.$(OBJ_EXT): %.$(SRC_EXT)
