@@ -22,13 +22,6 @@ int main() {
   }
 }
 
-bool is_int(double n) {
-  double intpart;
-  return std::modf(n, &intpart) == 0.0;
-}
-
-// Bring numbers into an integer representation first, sum them and then bring
-// them back to a double.
 double solve(std::vector<double> nums) {
   int n = nums.size();
   double sum = 0;
