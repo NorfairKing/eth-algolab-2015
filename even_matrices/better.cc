@@ -20,7 +20,7 @@ Matrix::Matrix(int size) {
   elem = new int[n * n];
   for (int x = 0; x < n; ++x) {
     for (int y = 0; y < n; ++y) {
-      set(x,y,0);
+      set(x, y, 0);
     }
   }
 }
