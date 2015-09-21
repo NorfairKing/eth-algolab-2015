@@ -36,14 +36,9 @@ double solve(std::vector<double> nums) {
     while(!is_int(nums[i] * pow(BASE, maxepower))) { maxepower++; }
   }
 
-  int pieces[n];
-  for (int i = 0; i < n; ++i) {
-    pieces[i] = nums[i] * pow(BASE, maxepower);
-  }
-
   int sum = 0;
   for (int i = 0; i < n; ++i) {
-    sum += pieces[i];
+    sum += nums[i] * pow(BASE, maxepower);
   }
 
   return sum / pow(BASE, maxepower);
