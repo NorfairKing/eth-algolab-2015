@@ -65,7 +65,7 @@ int onedevensums(std::vector<int> bits) {
     if (sum == 0) { ++even; }
     else { ++odd; }
   }
-  return (even * (even - 1))/2 + (odd * (odd - 1))/2;
+  return (even * (even - 1)) / 2 + (odd * (odd - 1)) / 2;
 }
 
 int solve(Matrix& matrix) {
