@@ -80,23 +80,36 @@ build () {
   make --makefile ${MAKEFILE} ${executable}
 }
 
+INPUT_EXT="in"
+OUTPUT_EXT="out"
+TMP_DIR="/tmp"
+
 run () {
   build
-  time ./${executable} < ${INPUT_FILE} > ${TMP_OUTPUT}
+  for i in *.${INPUT_EXT}; do
+    filename=$(basename "$i")
+    extension="${filename##*.}"
+    filename="${filename%.*}"
+    ./${executable} < ${filename}.${INPUT_EXT} > ${TMP_DIR}/${filename}.${OUTPUT_EXT}
+  done
 }
 
-INPUT_FILE='sample.in'
-OUTPUT_FILE='sample.out'
-TMP_OUTPUT='/tmp/output.txt'
 test_solution () {
   run
-  echo
-  diff ${OUTPUT_FILE} ${TMP_OUTPUT} 
-  echo "Diff:"
+  for i in *.${INPUT_EXT}; do
+    filename=$(basename "$i")
+    extension="${filename##*.}"
+    filename="${filename%.*}"
 
-  if [[ "$?" == "0" ]]; then
-    echo "Nothing, Yay!"
-  fi
+    output_file="${filename}.${OUTPUT_EXT}"
+    echo
+    diff ${output_file} ${TMP_DIR}/${output_file}
+    echo "Diff:"
+
+    if [[ "$?" == "0" ]]; then
+      echo "Nothing, Yay!"
+    fi
+  done
 }
 
 publish () {
