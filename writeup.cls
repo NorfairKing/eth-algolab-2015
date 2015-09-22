@@ -5,6 +5,9 @@
 \usepackage{pdfpages}
 \AtBeginDocument{\includepdf[pages=-]{assignment.pdf}}
 
+% \nointent everywhere
+\setlength\parindent{0pt}
+
 % Fancy headers and footers
 \usepackage{fancyhdr}
 \pagestyle{fancy}
