@@ -28,12 +28,11 @@ std::vector<bool> get_possibles(std::vector<weighing>& ws, int n) {
   std::vector<bool> possibles(n + 1, true);
   int k = ws.size();
   for (int i = 0; i < k; ++i) {
-    weighing w = ws[i];
-    if (w.out == EQ) {
-      int pan_size = w.left.size();
+    if (ws[i].out == EQ) {
+      int pan_size = ws[i].left.size();
       for (int coin = 0; coin < pan_size; ++coin) {
-        possibles[w.left[coin]]  = false;
-        possibles[w.right[coin]] = false;
+        possibles[ws[i].left[coin]]  = false;
+        possibles[ws[i].right[coin]] = false;
       }
     }
   }
@@ -44,7 +43,9 @@ std::vector<int> intersect(std::vector<int>& suspects, std::vector<int>& coins) 
   std::sort(coins.begin(), coins.end());
   std::vector<int> result(suspects.size());
   std::vector<int>::iterator it;
-  it = std::set_intersection(suspects.begin(), suspects.end(), coins.begin(), coins.end(), result.begin());
+  it = std::set_intersection(suspects.begin(), suspects.end(),
+                             coins.begin(), coins.end(),
+                             result.begin());
   result.resize(it - result.begin());
   return result;
 }
@@ -73,13 +74,17 @@ int solve(std::vector<weighing> ws, int n) {
     right_suspects = intersect(right_suspects, w.right);
   }
 
-  if (left_suspects.size() == 1) {
-    return left_suspects[0];
-  } else if (right_suspects.size() == 1) {
-    return right_suspects[0];
-  } else {
+  int total_suspects = left_suspects.size() + right_suspects.size();
+  if (total_suspects != 1){
     return 0;
   }
+  if (left_suspects.size() == 1) {
+    return left_suspects[0];
+  }
+  if (right_suspects.size() == 1) {
+    return right_suspects[0];
+  }
+  return 0;
 }
 
 int main() {
