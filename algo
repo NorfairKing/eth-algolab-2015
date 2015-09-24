@@ -86,17 +86,17 @@ TMP_DIR="/tmp"
 
 run () {
   build
-  for i in *.${INPUT_EXT}; do
+  for i in *.${OUTPUT_EXT}; do
     filename=$(basename "$i")
     extension="${filename##*.}"
     filename="${filename%.*}"
-    ./${executable} < ${filename}.${INPUT_EXT} > ${TMP_DIR}/${filename}.${OUTPUT_EXT}
+    time ./${executable} < ${filename}.${INPUT_EXT} > ${TMP_DIR}/${filename}.${OUTPUT_EXT}
   done
 }
 
 test_solution () {
   run
-  for i in *.${INPUT_EXT}; do
+  for i in *.${OUTPUT_EXT}; do
     filename=$(basename "$i")
     extension="${filename##*.}"
     filename="${filename%.*}"
