@@ -3,6 +3,9 @@
 \begin{document}
 
 \begin{solutions}
+  The problem, in its simplest form, is as follows:
+  Find $a, b \in \mathbb{N}$ such that $am + bn \le l$ and minimise $l-am-bm$ with $b$ as high as possible.
+
   \begin{solution}{A naive solution}{\frac{l^2}{mn}}{1}
     The naive solution is to go over every possible combination of short and long shelves and keep the one with the least amount of error.
     \code{naive}{22}{37}
@@ -12,27 +15,40 @@
     Given an $b$, it is easy to see that we can calculate the maximum $a$ we can have.
     This will give us the error $e$ as well.
     This solution just goes over all possible $b$'s.
-    \code{better}{24}{40}
+    \code{better}{5}{20}
+  \end{solution}
+
+  \begin{solution}{The dual better solution}{\frac{l}{m}}{1}
+    Notice that we can do the same thing we did in the better solution but with $a$'s instead of $b$'s.
+    This solution will become important later.
+    \code{dual_better}{5}{20}
   \end{solution}
 
   \begin{solution}{A very clever trick}{\sqrt{l}}{\sqrt{l}}
     The better solution is fine when $n$ is large but when $n$ is small it still takes time proportional to $l$.
-    Suppose we know that $n$ is small.
+    Suppose we know that $n$ is smaller than $\sqrt{l}$
     We can then do it faster.
-    \code{main}{46}{52}
 
-    The main problem is that we don't know how much of a gap we can fill by exchanging large shelves for small ones.
-    The first thing we will do is precalculate the minimum number of small shelves that remove a given gap.
-    In other words: $min[i]$ holds the lowest number of large shelves that add up to a sum that is equivalent to $i$, modulo $n$.
-    Because any modulo ring is cyclic, we know we can stop populating this array as soon as we visit a spot for the second time.
-    \code{main}{54}{65}
+    First look back at the dual better solution.
+    The loop goes through $\frac{l}{m}$ iterations but it only needs to go through $n$ at most.
+    \code{main}{24}{40}
 
-    We then try every possible error, starting from zero, and check whether we can achieve that error.
-    This ensures that we get the lowest possible error.
-    We want to use as many large shelves as possible so we have to check how many small shelves we have to use.
-    When we use large shelves, the total will be a multiple of $n$.
-    We will fill up the rest (module $n$) with small shelves using the array we just precomputed.
-    \code{main}{67}{76}
+    To show this, consider a configuration where $a$ is larger than $n$:
+    \[ a = n + x \text{ with } x > 0 \]
+    Because $n$ is smaller than $\sqrt{l}$, $x$ has to be smaller than $m-n$ (and thus smaller than $n$) for the configuration to be valid.
+
+    We can rewrite the total as follows:
+    \[
+      a m - b n
+      = (n + x) m - b * n
+      = nm - xm - bn
+      = x m + (b + m) n
+    \]
+    This means that the solution is equivalent to a solution where $x < n$ that we have therefore already checked.
+
+    Now we can just use the best algorithm depending on the situation:
+
+    \code{main}{42}{48}
   \end{solution}
 \end{solutions}
 
