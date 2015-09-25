@@ -2,8 +2,8 @@
 #include <vector>
 #include <queue>
 
-constexpr int maxvelocity = 3;
-constexpr int minvelocity = -3;
+constexpr int MAX_VELOCITY = 3;
+constexpr int MIN_VELOCITY = -3;
 
 enum color { WHITE, GRAY, BLACK };
 
@@ -20,9 +20,9 @@ struct velocity {
     for (int dx = -1; dx <= 1; ++dx) {
       for (int dy = -1; dy <= 1; ++dy) {
         int newx = x + dx;
-        if (!(newx <= maxvelocity && newx >= minvelocity)) { continue; }
+        if (!(newx <= MAX_VELOCITY && newx >= MIN_VELOCITY)) { continue; }
         int newy = y + dy;
-        if (!(newy <= maxvelocity && newy >= minvelocity)) { continue; }
+        if (!(newy <= MAX_VELOCITY && newy >= MIN_VELOCITY)) { continue; }
         velocity v;
         v.x = newx;
         v.y = newy;
@@ -106,11 +106,13 @@ bool** precompute_free(int xlen, int ylen, const std::vector<obstacle>& obstacle
   return free;
 }
 
-int solve(int xlen, int ylen, const position& startpos, const position& endpos, const std::vector<obstacle>& obstacles) {
+int solve(int xlen, int ylen,
+          const position& startpos, const position& endpos,
+          const std::vector<obstacle>& obstacles) {
   bool** free = precompute_free(xlen, ylen, obstacles);
 
-  int velocities = maxvelocity - minvelocity + 1;
-  int shift = abs(minvelocity);
+  int velocities = MAX_VELOCITY - MIN_VELOCITY + 1;
+  int shift = abs(MIN_VELOCITY);
 
   color visited[xlen][ylen][velocities][velocities];
 
