@@ -24,18 +24,14 @@ int solve(std::vector<wizard>& ws) {
   std::sort(ws.begin(), ws.end());
   for (auto it = ws.begin(); it < ws.end(); ++it) {
     if (it->ringpos >= right) {
-      // We can just place the boat
       second_right = right;
       right = std::max(it->ringpos, right + it->boatlen);
       ++counter;
     } else {
       int first_free = std::max(it->ringpos, second_right + it->boatlen);
       if (first_free <= right) {
-        // Replace the last boat with this one.
         right = first_free;
-      } else {
-        // Skip this boat
-      }
+      } else ; // Skip this boat
     }
   }
   return counter;

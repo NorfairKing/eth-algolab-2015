@@ -35,7 +35,11 @@
 \usepackage{mdframed}
 
 % Styles
-\newenvironment{solutions}{}{}
+\newenvironment{solutions}
+{}
+{
+
+}
 \newenvironment{solution}[3]
 {
   \section{#1}
@@ -51,3 +55,7 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 
+
+% For tags
+\newcommand{\bx}[1]{ \framebox[1.1\width]{#1} }
+\newcommand{\tagged}[1]{\bx{#1}}
