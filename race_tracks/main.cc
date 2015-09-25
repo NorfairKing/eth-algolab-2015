@@ -19,7 +19,6 @@ struct velocity {
     std::vector<velocity> neighbors;
     for (int dx = -1; dx <= 1; ++dx) {
       for (int dy = -1; dy <= 1; ++dy) {
-        if (dx == 0 && dy == 0) { continue; } // There would be no use.
         int newx = x + dx;
         if (!(newx <= maxvelocity && newx >= minvelocity)) { continue; }
         int newy = y + dy;
@@ -33,11 +32,6 @@ struct velocity {
     return neighbors;
   }
 };
-                                    
-std::ostream& operator<< (std::ostream &out, const velocity &vel) {
-  out << "Vel: (" << vel.x << ", " << vel.y << ")" << std::endl;
-  return out;
-}
 
 struct position {
   int x;
@@ -59,13 +53,6 @@ struct position {
   }
 };
 
-
-std::ostream& operator<< (std::ostream& out, position& pos)
-{
-  out << "Pos: (" << pos.x << ", " << pos.y << ")" << std::endl;
-  return out;
-}
-
 class Vertex {
   public:
     position pos;
@@ -73,7 +60,6 @@ class Vertex {
     int hops;
     Vertex(const position& pos);
     Vertex(const position& pos, const velocity& vel, int hops);
-    friend std::ostream& operator<< (std::ostream& out, const Vertex& v);
     bool operator== (const Vertex& that) {
       return (this->pos == that.pos && this->vel == that.vel);
     }
@@ -92,13 +78,6 @@ Vertex::Vertex(const position& pos, const velocity& vel, int hops) {
   this->pos = pos;
   this->vel = vel;
   this->hops = hops;
-}
-
-std::ostream& operator<< (std::ostream& out, const Vertex& v) {
-  out << v.pos;
-  out << v.vel;
-  out << "Hops: " << v.hops << std::endl;
-  return out;
 }
 
 struct obstacle {
@@ -132,12 +111,9 @@ int solve(int xlen, int ylen, const position& startpos, const position& endpos, 
 
   int velocities = maxvelocity - minvelocity + 1;
   int shift = abs(minvelocity);
-  //std::cout << velocities << std::endl;
 
   color visited[xlen][ylen][velocities][velocities];
-  //std::cout << "created array" << std::endl;
 
-  // Assign values to the elements
   for(int px = 0; px < xlen; ++px) {
     for(int py = 0; py < ylen; ++py) {
       for(int vx = 0; vx < velocities; ++vx) {
@@ -147,37 +123,17 @@ int solve(int xlen, int ylen, const position& startpos, const position& endpos, 
       }
     }
   }
-  //std::cout << xlen * ylen * velocities * velocities << std::endl;
 
-
-  //for (int x = 0; x < xlen; ++x) {
-  //  for (int y = 0; y < ylen; ++y) {
-  //    std::cout << free[x][y];
-  //  }
-  //  std::cout << std::endl;
-  //}
   if (! free[endpos.x][endpos.y]) { return -1; }
 
-  //std::cout << xlen << " x " << ylen << std::endl;
-  //std::cout << "Going to: " << endpos;
-
   std::queue<Vertex> q; 
-  //std::unordered_set<Vertex> visited;
 
   Vertex start(startpos);
-
-  //velocity direction;
-  //direction.x = sign(endpos.x - startpos.x);
-  //direction.y = sign(endpos.y - startpos.y);
-  //std::cout << "direction: " << direction;
 
   q.push(start);
   while (!q.empty()) {
     Vertex cur = q.front();
     q.pop();
-
-    //std::cout << "handling: " << std::endl;
-    //std::cout << cur;
     
     position cp = cur.pos;
     if (cp == endpos) {
@@ -187,34 +143,19 @@ int solve(int xlen, int ylen, const position& startpos, const position& endpos, 
     velocity cv = cur.vel;
     std::vector<velocity> neighbors = cv.neighbors();
 
-
     for (auto it = neighbors.begin(); it < neighbors.end(); ++it) {
-      //std::cout << "neighbor: " << *it;
-
       velocity v = *it;
       position p = cp.addvelocity(v);
 
       if (! p.isWithinField(xlen, ylen)) { continue; }
       if (! free[p.x][p.y]) { continue; }
       if (visited[p.x][p.y][v.x + shift][v.y + shift] != WHITE) { continue; }
-
       Vertex next = Vertex(p, v, cur.hops + 1);
-
-      //std::cout << "adding: " << std::endl;
-      //std::cout << next;
-      //std::cout << std::endl;
-
       q.push(next);
       visited[p.x][p.y][v.x + shift][v.y + shift] = GRAY;
     }
-
-    //std::cout << "done with node." << std::endl;
-    //std::cout << std::endl;
-    //std::cout << std::endl;
     visited[cur.pos.x][cur.pos.y][cur.vel.x + shift][cur.vel.y + shift] = BLACK;
   }
-
-  //std::cout << visited[0][0][0][0] << std::endl;
   return -1;
 }
 
