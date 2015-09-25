@@ -1,0 +1,44 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{A way too large piece of code}{XY}{XY}
+    This problem requires a non-trivial model for a good solution.
+    Your intuition probably tells you that this is a graph problem like most shortest-path problems.
+    This can indeed be modeled as a graph problem but not the way you would naively think.
+    Just using positions as vertices will get you into trouble.
+    Vertices need to be tuples of positions and velocities.
+
+    \code{main}{56}{81}
+
+    We can then perform some sort of shortest-path algorithm on this graph to find the optimal number of hops.
+    Because all the edges have the same weight, Breadth first search (BFS) seems appropriate.
+    Luckily, edges can be computed on-line.
+    There is no need to build and hold in memory the entire graph.
+
+    Given A certain vertex, we build the edges by adding all possible velocities that the hopper can get to the current position.
+    
+    \code{main}{18}{33}
+
+    To make sure we take the obstacles into account, we will precompute for each position whether it is free to hop on.
+
+    \code{main}{90}{107}
+
+    Lastly, we keep track of the vertices we have already visited to avoid duplicate computation.
+
+    \code{main}{5}{8}
+
+    Initially, all vertices are colored \mintinline{c++}{WHITE}, which means that they haven't been visited.
+
+    \code{main}{109}{127}
+  
+    When vertices are added to the queue, they are colored \mintinline{c++}{GREY}, which means that they shouldn't be added again.
+    When vertices are visited, they are colored \mintinline{c++}{BLACK}, which means that they shouldn't be visited again.
+
+    \code{main}{129}{162}
+
+  \end{solution}
+\end{solutions}
+
+\end{document}

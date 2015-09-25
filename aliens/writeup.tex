@@ -1,0 +1,36 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{A naive solution}{n(n + m)}{1}
+    Even the naive solution to this problem requires a considerable amount of work.
+    The naive solution is to just go over all possible quadruples and count all the even sums of the bits inbetween them.
+
+    The problem is modeled as a graph problem.
+    The vertices are either humans or aliens.
+
+    \code{naive}{14}{18}
+
+    Between an alien and a human, an edge exists if the source feels superior to the destination.
+    For aliens, this is easily checked.
+    The alien feels directly superior to all the humans in its interval.
+
+    \code{naive}{9}{12}
+
+    For humans this is not so easy.
+    We will build a lookup table for the aliens that a human feels superior to.
+
+    \code{naive}{23}{38}
+
+    To count the number of aliens that feel superior to all others, we will go over all aliens and search to a depth of $3$ (\mintinline{c++}{ALIEN_MEMORY}) in the graph for all the entities it feels superior to and cross them off the list.
+
+    \code{naive}{40}{97}
+
+    We then go through the list and check whether all the entities have been found:
+
+    \code{naive}{100}{115}
+  \end{solution}
+\end{solutions}
+
+\end{document}

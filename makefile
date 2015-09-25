@@ -8,7 +8,8 @@ BIN_EXT = bin
 OPTIMISATION_FLAG = #-O3
 WARNING_FLAGS = -Wall -Werror
 STANDARD_FLAGS = -std=c++11
-STD_LIBS = -lm
+STD_LIBS = \
+					-lm
 
 CC_FLAGS = \
 	$(OPTIMISATION_FLAG) \

@@ -45,3 +45,9 @@
 }
 
 
+% For maths
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
