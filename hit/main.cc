@@ -18,10 +18,11 @@ bool solve(R ray, std::vector<S>& obstacles) {
 }
 
 int main() {
-  while(true) {
+  while (true) {
     int n;
     std::cin >> n;
-    if(n == 0) { break; }
+    if (n == 0) { break; }
+
     long x, y, a, b;
     std::cin >> x >> y >> a >> b;
     P p(x, y), q(a, b);
