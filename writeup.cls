@@ -59,3 +59,6 @@
 % For tags
 \newcommand{\bx}[1]{ \framebox[1.1\width]{#1} }
 \newcommand{\tagged}[1]{\bx{#1}}
+
+% For intervals
+\usepackage{interval}
