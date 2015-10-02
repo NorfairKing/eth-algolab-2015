@@ -12,7 +12,7 @@ STD_LIBS = \
 					-lm \
 					-lboost_system \
 					-lboost_thread \
-					-lCGAL -lgmp -lmpfr -frounding-math
+					-lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core
 
 CC_FLAGS = \
 	$(OPTIMISATION_FLAG) \
