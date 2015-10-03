@@ -8,8 +8,7 @@ typedef K::Segment_2 S;
 typedef K::Ray_2 R;
 typedef K::Point_2 P;
 
-double floor_to_double(const K::FT& x)
-{
+double floor_to_double(const K::FT& x) {
   double a = std::floor(CGAL::to_double(x));
   while (a > x) a -= 1;
   while (a+1 <= x) a += 1;
