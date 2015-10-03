@@ -11,10 +11,6 @@ struct wizard {
 bool operator < (const wizard& w1, const wizard& w2) {
   return w1.ringpos < w2.ringpos;
 }
-std::ostream& operator << (std::ostream &out, wizard& w) {
-  out << "Boat length: " << w.boatlen << "  Ring pos: " << w.ringpos << std::endl;
-  return out;
-}
 
 int solve(std::vector<wizard>& ws) {
   int counter = 0;

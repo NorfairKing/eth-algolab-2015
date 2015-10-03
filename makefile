@@ -9,7 +9,10 @@ OPTIMISATION_FLAG = #-O3
 WARNING_FLAGS = -Wall -Werror
 STANDARD_FLAGS = -std=c++11
 STD_LIBS = \
-					-lm
+					-lm \
+					-lboost_system \
+					-lboost_thread \
+					-lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core
 
 CC_FLAGS = \
 	$(OPTIMISATION_FLAG) \

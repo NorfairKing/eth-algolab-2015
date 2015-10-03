@@ -1,117 +1,47 @@
 #include <iostream>
 #include <vector>
 #include <queue>
-
-constexpr int ALIEN_MEMORY = 3;
-
-enum species { HUMAN, ALIEN };
+#include <algorithm>
 
 struct interval {
   int first;
   int last;
 };
 
-struct vertex {
-  int number;
-  species sp;
-  int hops;
-};
+bool operator < (const interval& i1, const interval& i2) {
+  if (i1.first == i2.first) {
+    return i1.last > i2.last;
+  } else {
+    return i1.first < i2.first;
+  }
+}
 
-enum color { WHITE, GREY, BLACK };
+bool operator == (const interval& i1, const interval& i2) {
+  return i1.first == i2.first && i1.last == i2.last;
+}
 
 int solve (int humans, int aliens, std::vector<interval>& ais) {
-  std::vector<std::vector<int>> reverse_map(humans);
+  std::sort(ais.begin(), ais.end());
+
+  int left = humans;
+  int right = -1;
   for (int a = 0; a < aliens; ++a) {
-    interval i = ais[a];
-    if (i.first == -1 && i.last == -1) {
-      for (int h = 0; h < humans; ++h) {
-        reverse_map[h].push_back(a);
-      }
-    } else {
-      for (int h = 0; h < i.first; ++h) {
-        reverse_map[h].push_back(a);
-      }
-      for (int h = i.last + 1; h < humans; ++h) {
-        reverse_map[h].push_back(a);
-      }
-    }
+    interval& i = ais[a];
+    if (i.first > right + 1) { return 0; }
+    right = std::max(i.last, right);
+    left = std::min(i.first, left);
   }
+  if (right < humans - 1) { return 0; }
+  if (left > 0) { return 0; }
 
   int counter = 0;
-  for (int alien = 0; alien < aliens; ++alien) {
-    color visited_humans[humans];
-    for (int h = 0; h < humans; ++h) {
-      visited_humans[h] = WHITE;
-    }
-    color visited_aliens[aliens];
-    for (int a = 0; a < aliens; ++a) {
-      visited_aliens[a] = WHITE;
-    }
-
-    std::queue<vertex> q;
-
-    vertex start;
-    start.number = alien;
-    start.sp = ALIEN;
-    start.hops = 0;
-    q.push(start);
-
-    while (!q.empty()) {
-      vertex cur = q.front();
-      q.pop();
-
-      if (cur.hops > ALIEN_MEMORY) { break; }
-
-      if (cur.sp == ALIEN) {
-        int a = cur.number;
-        if (!(ais[a].first == -1 && ais[a].last == -1)) { 
-          for (int h = ais[a].first; h <= ais[a].last; ++h) {
-            if (visited_humans[h] != WHITE) { continue; }
-            vertex next;
-            next.number = h;
-            next.sp = HUMAN;
-            next.hops = cur.hops + 1;
-            q.push(next);
-
-            visited_humans[h] = GREY;
-          }
-        }
-        visited_aliens[a] = BLACK;
-      } else if (cur.sp == HUMAN) {
-        int h = cur.number;
-        for (auto it = reverse_map[h].begin(); it < reverse_map[h].end(); ++it) {
-          int a = *it;
-          if (visited_aliens[a] != WHITE) { continue; }
-          vertex next;
-          next.number = *it;
-          next.sp = ALIEN;
-          next.hops = cur.hops + 1;
-          q.push(next);
-
-          visited_aliens[a] = GREY;
-        }
-        visited_humans[h] = BLACK;
-      } else {
-        exit(1); // Cannot happen, right?
-      }
-    }
-
-    bool allSuperior = true;
-    for (int h = 0; h < humans; ++h) {
-      if (visited_humans[h] != BLACK) {
-        allSuperior = false;
-        break;
-      }
-    }
-    if (!allSuperior) { continue; }
-    for (int a = 0; a < aliens; ++a) {
-      if (a == alien) { continue; } // Doesn't have to be superior to itself.
-      if (visited_aliens[a] != BLACK) {
-        allSuperior = false;
-        break;
-      }
-    }
-    if (allSuperior) { counter++; }
+  int rightmost = -1;
+  for (int a = 0; a < aliens; ++a) {
+    interval& i = ais[a];
+    if (i.last <= rightmost) { continue; }
+    rightmost = std::max(rightmost, i.last);
+    if (a < aliens - 1 && i == ais[a + 1]) { continue; }
+    counter++;
   }
 
   return counter;
