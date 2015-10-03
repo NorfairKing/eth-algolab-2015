@@ -31,6 +31,30 @@
 
     \code{naive}{100}{115}
   \end{solution}
+
+  \begin{solution}{A much more simple solution}{m}{1}
+    It turns out that there is no need to actually traverse the graph of superiority.
+
+    The first key realisation is that if an alien $x$ has a superiority interval $\interval{a}{b}$ and another alien $y$ has superiority interval $\interval{c}{d}$ that is a subset of $\interval{a}{b}$, then alien $b$ can never feel superior to alien $a$.
+
+    The next realisation is that the superiority intervals of the aliens must unite to the entire set of humans.
+    
+    The final realisation is that if the superiority interval is not contained within the superiority interval of any other alien, then that alien can reach every other alien in at most two steps and therefore all humans in at most 3.
+
+    Putting it all together, we'll sort the intervals by left ends and then by size.
+
+    \code{main}{6}{21}
+
+    \code{main}{23}{24}
+
+    Then we'll check whether the intervals unite to the entire set of humans.
+
+    \code{main}{25}{35}
+
+    Lastly we count all the intervals that partially overlap.
+
+    \code{main}{37}{48}
+  \end{solution}
 \end{solutions}
 
 \end{document}
