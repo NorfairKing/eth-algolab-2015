@@ -5,18 +5,18 @@ TEST_EXT = $(SRC_EXT)
 OBJ_EXT = o
 BIN_EXT = bin
 
-OPTIMISATION_FLAG = #-O3
+OPTIMISATION_FLAG = # -O3
 WARNING_FLAGS = -Wall -Werror
 STANDARD_FLAGS = -std=c++11
 STD_LIBS = \
-					-lm \
-					-lboost_system \
-					-lboost_thread \
-					-lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core
+	-lm \
+	-lboost_system \
+	-lboost_thread \
+	-lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core
 
 CC_FLAGS = \
 	$(OPTIMISATION_FLAG) \
-  $(WARNING_FLAGS) \
+	$(WARNING_FLAGS) \
 	$(STD_LIBS) \
 	$(STANDARD_FLAGS)
 
