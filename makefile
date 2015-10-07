@@ -11,8 +11,9 @@ STANDARD_FLAGS = -std=c++11
 STD_LIBS = \
 	-lm \
 	-lboost_system \
+	-lboost_graph \
 	-lboost_thread \
-	-lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core
+	-lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core \
 
 CC_FLAGS = \
 	$(OPTIMISATION_FLAG) \
