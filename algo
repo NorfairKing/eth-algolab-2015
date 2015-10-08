@@ -90,7 +90,7 @@ run () {
     filename=$(basename "$i")
     extension="${filename##*.}"
     filename="${filename%.*}"
-    time ./${executable} < ${filename}.${INPUT_EXT} > ${TMP_DIR}/${filename}.${OUTPUT_EXT}
+    time ./${executable} < "${filename}.${INPUT_EXT}" > "${TMP_DIR}/${filename}.${OUTPUT_EXT}"
   done
 }
 
@@ -103,7 +103,7 @@ test_solution () {
 
     output_file="${filename}.${OUTPUT_EXT}"
     echo
-    diff ${output_file} ${TMP_DIR}/${output_file}
+    diff "${output_file}" "${TMP_DIR}/${output_file}"
     echo "Diff:"
 
     if [[ "$?" == "0" ]]; then
