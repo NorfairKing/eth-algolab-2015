@@ -21,9 +21,7 @@ int solve(vector<vector<int>>& positions) {
 
   int min_dist = INT_MAX;
   
-  // Keep track of the last chosen position for each word
   vector<int> chosen_position(n, -1);
-  // Keep track of the current set of chosen words
   set<pair<int, int>> chosen; // position, word
   int found_words = 0;
   while (!poss.empty()) {
