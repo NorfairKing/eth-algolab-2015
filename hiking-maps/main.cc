@@ -2,6 +2,7 @@
 #include <vector>
 #include <climits>
 #include <algorithm>
+#include <deque>
 #include <CGAL/Exact_predicates_exact_constructions_kernel.h>
 
 using namespace std;
@@ -35,30 +36,63 @@ bool contained_in(S& segment, T& triangle) {
 int solve(int m, int n, vector<S>& legs, vector<T>& triangles) {
   int segs = m - 1;
   int min_dist = INT_MAX;
-  for (int i = 0; i < segs; ++i) {
-    for (int j = i; j < segs; ++j) {
-      // maps from i to j inclusive.
 
+  int i = -1;
+  int j = 0;
 
-      vector<bool> found(segs);
-      for (int k = 0; k < n; ++k) {
-        for (int l = i; l <= j; ++l) {
-          if (contained_in(legs[l], triangles[k])) {
-            found[l] = true;
-          }
-        }
+  bool state = true; // True is looking right, false is taking left.
+  vector<deque<int>> covering(segs); // triangles covering that segment
+  while (true) {
+    if (j > i) { state = true; }
+    if (j >= n) { break; }
+    if (state) {
+      //cout << "state=true" << endl;
+      if (i >= n - 1) {
+        state = false;
+        continue;
       }
+      ++i;
       for (int k = 0; k < segs; ++k) {
-        if (!found[k]) {
-          //cout << "false" << endl;
-          continue;
-        } else {
-          //cout << "true" << endl;
-          int dist = j - i + 1;
-          min_dist = std::min(dist, min_dist);
+        if (contained_in(legs[k], triangles[i])) {
+          covering[k].push_back(i);
         }
       }
+    } else {
+      for (int k = 0; k < segs; ++k) {
+        if (contained_in(legs[k], triangles[j])) {
+          assert(covering[k].front() == j);
+          covering[k].pop_front();
+        }
+      }
+      ++j;
+    }
+
+    //cout << "i: " << i << "  j: " << j << endl;
+    bool all_covered = true;
+    for (int k = 0; k < segs; ++k) {
+      if (covering[k].empty()) { // not all covered
+        all_covered = false;
+        break;
+      }
+  
+      //cout << k << ": ";
+      //for (auto it = covering[k].begin(); it < covering[k].end(); ++it){
+      //  cout << *it << " ";
+      //}
       //cout << endl;
+    }
+    //cout << endl;
+    //cout << "i: " << i << "  j: " << j << "  segs: " << segs << "  n: " << n << endl;
+    if (all_covered) {
+      //cout << "all covered" << endl;
+      // all covered
+      min_dist = std::min(min_dist, i - j + 1);
+      //cout << "setting min_dist to: " << min_dist << endl;
+      state = false; // maybe less is fine too?
+      //cout << endl;
+    } else {
+      //cout << " not all covered " << endl;
+      state = true; // look for better situation.
     }
   }
 
@@ -66,6 +100,8 @@ int solve(int m, int n, vector<S>& legs, vector<T>& triangles) {
 }
 
 int main() {
+  std::ios_base::sync_with_stdio(false);
+
   int cases;
   cin >> cases;
 
