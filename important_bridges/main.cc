@@ -47,17 +47,14 @@ bool operator < (const bridge& x, const bridge& y) {
 
 vector<bridge> solve(int n, int m, vector<bridge> bs) {
   Graph g(n);
-
   for (int i = 0; i < m; ++i) {
     add_edge(bs[i].from, bs[i].to, g);
   }
 
   CompMap component = get(edge_component, g);
-
   size_t num_comps = biconnected_components(g, component);
 
   vector<vector<bridge>> comps(num_comps);
-
   EdgeIt ei, ei_end;
   for (tie(ei, ei_end) = edges(g); ei != ei_end; ++ei) {
     bridge b;
@@ -67,13 +64,11 @@ vector<bridge> solve(int n, int m, vector<bridge> bs) {
   }
 
   vector<bridge> solution;
-
   for (size_t i = 0; i < num_comps; ++i) {
     if (comps[i].size() == 1) {
       solution.push_back(comps[i][0]);
     }
   }
-
   return solution;
 }
 
