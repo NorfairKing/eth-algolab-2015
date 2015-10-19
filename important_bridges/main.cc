@@ -89,10 +89,17 @@ int main() {
     }
 
     vector<bridge> solution = solve(n, m, bs);
+    int s = solution.size();
+
+    for (int i = 0; i < s; ++i) {
+      int from = solution[i].from;
+      int to   = solution[i].to;
+      solution[i].from = min(from, to);
+      solution[i].to   = max(from, to);
+    }
 
     sort(solution.begin(), solution.end());
 
-    int s = solution.size();
     cout << s << endl;
     for (int i = 0; i < s; ++i) {
       cout << min(solution[i].from, solution[i].to) << " " << max(solution[i].from, solution[i].to) << endl;
