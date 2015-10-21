@@ -1,5 +1,5 @@
 #include <iostream>
-#include <bitset>
+#include <queue>
 #include <vector>
 
 
@@ -9,15 +9,21 @@ using namespace std;
 class State {
   public:
     State(int n, int k);
-    State( State& other );
+    State(int n, int k, int pattern);
+    State(const State& other);
     ~State();
 
     void set(int ix, bool val);
     void set(int part, int nr, bool val);
+    void toggle(int ix);
+    void toggle(int part, int nr);
     bool get(int ix);
     bool get(int part, int nr);
 
+    uint getPart(int part);
+
     void switchFirstT(int t);
+    int distance(State& other);
   private:
     int _k;
     int _n;
@@ -40,9 +46,18 @@ State::State(int n, int k) {
   _n = n;
   _p = n / k;
   state = vector<uint>(_p);
+  for (int p = 0; p < _p; ++p) {
+    state[p] = 0;
+  }
 }
 
-State::State(State& other) {
+State::State(int n, int k, int pattern) : State(n, k) {
+  for (int p = 0; p < n / k; ++p) {
+    state[p] = pattern;
+  }
+}
+
+State::State(const State& other) {
   this->_k = other._k;
   this->_n = other._n;
   this->_p = other._p;
@@ -83,6 +98,16 @@ void State::set(int part, int nr, bool val) {
   // cout << sp << endl;
 }
 
+void State::toggle(int ix) {
+  int part = ix / _k;
+  int nr   = ix % _k;
+  return toggle(part, nr);
+}
+
+void State::toggle(int part, int nr) {
+  state[part] ^= (1 << nr);
+}
+
 bool State::get(int ix) {
   int part = ix / _k;
   int nr   = ix % _k;
@@ -93,19 +118,69 @@ bool State::get(int part, int nr) {
   return state[part] & (1 << nr);
 }
 
+uint State::getPart(int part) {
+  return state[part];
+}
+
 void State::switchFirstT(int t) {
-  for (int i = 0; i < t; ++i) {
-    state[i] ^= FULL_INT; // Flip them all.
+  for (int p = _p - 1; p >= _p - t; --p) {
+    state[p] ^= FULL_INT; // Flip them all.
   }
 }
 
+int State::distance(State& that) {
+  int dist = 0;
+  for (int p = 0; p < _p; ++p) {
+    uint diff = this->getPart(p) ^ that.getPart(p);
+    diff &= (1 << _k) - 1; // Only look at the last k bits.
+
+    while(diff != 0){ // Brian Kernighan algorithm
+      diff &= (diff - 1);
+      dist++;
+    }
+  }
+  return dist;
+}
+
 int solve(int n, int k, int x, State& start) {
-  cout << start;
-  start.switchFirstT(2);
-  cout << start;
+  queue<pair<int, State>> q;
+  // cout << start;
+  State end(n, k, x);
+  // cout << end;
+  // int d = start.distance(end);
+  // cout << d << endl;
 
+  q.push(make_pair(0, start));
 
-  return 5;
+  while (!q.empty()) {
+    pair<int, State> next = q.front();
+    q.pop();
+    int num  = next.first;
+    State st = next.second;
+
+    int dist = end.distance(st);
+    // cout << num << " " << dist << " " << st;
+
+    if (dist == 0) { return num; }
+
+    for (int i = 0; i < n; ++i) {
+      State other(st);
+      other.toggle(i);
+      // cout << "  " << other;
+      pair<int,State> np = make_pair(num + 1, other);
+      q.push(np);
+    }
+
+    for (int p = 1; p <= n / k; ++p) {
+      State other(st);
+      // cout << "  " << other;
+      other.switchFirstT(p);
+      pair<int,State> np = make_pair(num + 1, other);
+      q.push(np);
+    }
+
+  }
+  return -1;
 }
 
 int main() {
