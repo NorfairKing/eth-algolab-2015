@@ -10,30 +10,58 @@ using namespace CGAL;
 
 typedef Exact_predicates_exact_constructions_kernel K;
 typedef K::Point_2 P;
-typedef K::Line_2 L;
-typedef K::Segment_2 S;
-typedef K::Triangle_2 T;
 
-bool contained_in(S& segment, T& triangle) {
-  if (!do_intersect(segment, triangle)) { return false; }
-  auto o = intersection(segment, triangle);
-  if (boost::get<P>(&*o)) {
-    // cout << "it's a point." << endl;
-    return false;
-  } else if (const S* os = boost::get<S>(&*o)) {
-    // cout << os->source() << ", " << os->target() << endl;
-    if (*os == segment || *os == segment.opposite()) {
-      return true;
-    } else {
-      return false;
-    } 
-  } else {
-    cout << "Strange intersection you got theren buddy!.";
-  }
-  return false;
+struct segment {
+  P p1;
+  P p2;
+};
+
+struct triangle {
+  segment s1;
+  segment s2;
+  segment s3;
+};
+
+void swap(P& a, P& b) {
+  P t = a;
+  a = b;
+  b = t;
 }
 
-int solve(int m, int n, vector<S>& legs, vector<T>& triangles) {
+void swap(segment& s) {
+  swap(s.p1, s.p2);
+}
+
+bool within(P& p, triangle& t) {
+  bool lt1 = left_turn(t.s1.p1, t.s1.p2, p);
+  //lt1 = !lt1;
+  bool lt2 = left_turn(t.s2.p1, t.s2.p2, p);
+  bool lt3 = left_turn(t.s3.p1, t.s3.p2, p);
+  // cout << t.s1.p1 << ", " << t.s1.p2 << ", " << p << endl;
+  // cout << t.s2.p1 << ", " << t.s2.p2 << ", " << p << endl;
+  // cout << t.s3.p1 << ", " << t.s3.p2 << ", " << p << endl;
+  cout << lt1 << " " << lt2 << " " << lt3 << endl;
+  return lt1 && lt2 && lt3;
+}
+
+bool contained_in(segment& s, triangle& t) {
+  bool result = within(s.p1, t) & within(s.p2, t);
+  cout << result << endl;
+  return result;
+}
+
+void normalise(triangle& t) {
+  if (!left_turn(t.s1.p1, t.s1.p2, t.s2.p1)) { swap(t.s1); }
+  if (!left_turn(t.s2.p1, t.s2.p2, t.s3.p1)) { swap(t.s2); }
+  if (!left_turn(t.s3.p1, t.s3.p2, t.s1.p1)) { swap(t.s3); }
+  assert(left_turn(t.s1.p1, t.s1.p2, t.s2.p1));
+  assert(left_turn(t.s2.p1, t.s2.p2, t.s3.p1));
+  assert(left_turn(t.s3.p1, t.s3.p2, t.s1.p1));
+}
+
+int solve(int m, int n, vector<segment>& legs, vector<triangle>& triangles) {
+  for (triangle t: triangles) { normalise(t); }
+
   int segs = m - 1;
   int min_dist = INT_MAX;
 
@@ -99,6 +127,7 @@ int solve(int m, int n, vector<S>& legs, vector<T>& triangles) {
   return min_dist;
 }
 
+
 int main() {
   std::ios_base::sync_with_stdio(false);
 
@@ -119,16 +148,18 @@ int main() {
     }
     //cout << endl;
 
-    vector<S> ss;
+    vector<segment> ss;
     for (int i = 0; i < m - 1; ++i) {
-      S si(ps[i], ps[i + 1]);
+      segment s;
+      s.p1 = ps[i];
+      s.p2 = ps[i + 1];
       //cout << si << endl;
-      ss.push_back(si);
+      ss.push_back(s);
     }
     //cout << endl;
 
 
-    vector<T> ts;
+    vector<triangle> ts;
     for (int i = 0; i < n; ++i) {
       P ps[6];
       for (int j = 0; j < 6; ++j) {
@@ -137,26 +168,20 @@ int main() {
         //cout << x << ", " << y << endl;
         ps[j] = P(x, y);
       }
-      L l1(ps[0], ps[1]);
-      L l2(ps[2], ps[3]);
-      L l3(ps[4], ps[5]);
+      segment s1, s2, s3;
+      s1.p1 = ps[0];
+      s1.p2 = ps[1];
+      s2.p1 = ps[2];
+      s2.p2 = ps[3];
+      s3.p1 = ps[4];
+      s3.p2 = ps[5];
 
-      //cout << l1 << endl;
-      //cout << l2 << endl;
-      //cout << l3 << endl;
-
-      //cout << endl;
-
-      auto i1 = intersection(l1, l2);
-      const P* p1 = boost::get<P>(&*i1);
-      auto i2 = intersection(l2, l3);
-      const P* p2 = boost::get<P>(&*i2);
-      auto i3 = intersection(l1, l3);
-      const P* p3 = boost::get<P>(&*i3);
-
-      T t(*p1, *p2, *p3);
-      //cout << t << endl;
+      triangle t;
+      t.s1 = s1;
+      t.s2 = s2;
+      t.s3 = s3;
       ts.push_back(t);
+
       //cout << endl;
     }
     //cout << endl;
