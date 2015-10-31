@@ -49,25 +49,31 @@ struct game {
 };
 
 bool solve (int n, int m, vector<game> games, vector<int> scores) {
-  // Remove all known games from the leaderboard. They're not relevant.
-  vector<game> ugames;
+  // Can't have more points than games
+  int sum = 0;
+  for (int i = 0; i < n; ++i) {
+    sum += scores[i];
+  }
+  if (sum != m) { return false; }
+
+  // Can't get less points than you already have.
+  vector<int> left(scores);
   for (int i = 0; i < m; ++i) {
-    game& g = games[i];
-    switch (g.o) {
+    game& gg = games[i];
+
+    switch (gg.o) {
       case UK:
-        ugames.push_back(g);
         continue;
       case P1:
-        --scores[g.p1];
+        --left[gg.p1];
         break;
       case P2:
-        --scores[g.p2];
+        --left[gg.p2];
         break;
     }
   }
-
   for (int i = 0; i < n; ++i) {
-    if (scores[i] < 0) { return false; }
+    if (left[i] < 0) { return false; }
   }
 
   // Now this is a flow problem!
@@ -80,36 +86,59 @@ bool solve (int n, int m, vector<game> games, vector<int> scores) {
   // For every player, have a link to the sink with the score required according to the leaderboard.
   // Solve the maxflow problem.
   // If the flow is equal to the sum of the leaderboard, it's possible.
-  Graph g(m + n);
+  Graph g;
   EdgeCapacityMap capacity = get(edge_capacity, g);
   ReverseEdgeMap rev_edge = get(edge_reverse, g);
   EdgeAdder ea(g,capacity, rev_edge);
 
+  vector<Vertex> pnode(n);
+  vector<Vertex> gnode(m);
+  for (int i = 0; i < n; ++i) {
+    Vertex pp = add_vertex(g);
+    pnode[i] = pp;
+  }
+  for (int i = 0; i < m; ++i) {
+    Vertex gg = add_vertex(g);
+    gnode[i] = gg;
+  }
+
   Vertex src = add_vertex(g);
   Vertex snk = add_vertex(g);
 
-  m = ugames.size();
-  // gameVertex = game id
-  // playerVertex = m + playerId
-
+  // From source to each game
   for (int i = 0; i < m; ++i) {
-    ea.addEdge(src, i, 1);
-
-    game& gg = ugames[i];
-    ea.addEdge(i, m + gg.p1, 1);
-    ea.addEdge(i, m + gg.p2, 1);
+    ea.addEdge(src, gnode[i], 1);
   }
 
+  // From games to players
+  for (int i = 0; i < m; ++i) {
+    game& gg = games[i];
+    Vertex gn = gnode[i];
+    Vertex p1 = pnode[gg.p1];
+    Vertex p2 = pnode[gg.p2];
+
+    switch (gg.o) {
+      case UK:
+        ea.addEdge(gn, p1, 1);
+        ea.addEdge(gn, p2, 1);
+        break;
+      case P1:
+        ea.addEdge(gn, p1, 1);
+        break;
+      case P2:
+        ea.addEdge(gn, p2, 1);
+        break;
+    }
+  }
+
+  // From players to sink
   for (int i = 0; i < n; ++i) {
-    if (scores[i] == 0) { continue; } // This would only slow down the flow calculations.
-    ea.addEdge(m + i, snk, scores[i]);
+    Vertex p = pnode[i];
+    ea.addEdge(p, snk, scores[i]);
   }
 
   int flow = push_relabel_max_flow(g, src, snk);
-  int sum = 0;
-  for (int i = 0; i < n; ++i) {
-    sum += scores[i];
-  }
+
 
   return sum == flow;
 }
