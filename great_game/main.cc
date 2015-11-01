@@ -6,33 +6,6 @@
 using namespace std;
 using namespace boost;
 
-int min_moves(int p, vector<vector<int>>& ts, vector<optional<int>>& mins, vector<optional<int>>& maxs, int n);
-int max_moves(int p, vector<vector<int>>& ts, vector<optional<int>>& mins, vector<optional<int>>& maxs, int n);
-
-int max_moves(int p, vector<vector<int>>& ts, vector<optional<int>>& mins, vector<optional<int>>& maxs, int n) {
-  if (maxs[p]) { return maxs[p].get(); }
-
-  int cur_max_found = -1;
-  int ni = ts[p].size();
-  for (int i = 0; i < ni; ++i) { 
-    cur_max_found = max(cur_max_found, min_moves(ts[p][i], ts, mins, maxs, n));
-  }
-  maxs[p] = cur_max_found + 1;
-  return maxs[p].get();
-}
-
-int min_moves(int p, vector<vector<int>>& ts, vector<optional<int>>& mins, vector<optional<int>>& maxs, int n) {
-  if (mins[p]) { return mins[p].get(); }
-
-  int cur_min_found = INT_MAX;
-  int ni = ts[p].size();
-  for (int i = 0; i < ni; ++i) { 
-    cur_min_found = min(cur_min_found, max_moves(ts[p][i], ts, mins, maxs, n));
-  }
-  mins[p] = cur_min_found + 1;
-  return mins[p].get();
-}
-
 struct transition {
   int from;
   int to;
@@ -48,15 +21,28 @@ bool solve(int n, int m, int r, int b, vector<transition>& ts) {
     trans[ts[i].from].push_back(ts[i].to);
   }
 
-  vector<optional<int>> mins(n);
-  vector<optional<int>> maxs(n);
+  vector<int> mins(n, 0);
+  vector<int> maxs(n, 0);
 
-  mins[n - 1] = maxs[n - 1] = 0;
-  int r_min = min_moves(r, trans, mins, maxs, n);
-  int b_min = min_moves(b, trans, mins, maxs, n);
+  for (int i = n - 2
+      ; i >= min(r, b) // No need to go any further
+      ; --i) {
+    mins[i] = INT_MAX;
+    maxs[i] = 0;
 
-  int min_sherlock = -1;
-  int min_moriarty = -1;
+    int deg = trans[i].size();
+    for (int j = 0; j < deg; ++j) {
+      int k = trans[i][j];
+      mins[i] = min(mins[i], 1 + maxs[k]);
+      maxs[i] = max(maxs[i], 1 + mins[k]);
+    }
+  }
+
+  int r_min = mins[r];
+  int b_min = mins[b];
+
+  int min_sherlock;
+  int min_moriarty;
 
   // S Red
   // M Black
