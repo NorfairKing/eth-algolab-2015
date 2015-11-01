@@ -48,27 +48,27 @@ void normalise(triangle& t) {
 
 bool within(P& p, triangle& t) {
   assert(normal(t));
-  bool lt1 = left_turn(t.s1.p1, t.s1.p2, p);
-  bool lt2 = left_turn(t.s2.p1, t.s2.p2, p);
-  bool lt3 = left_turn(t.s3.p1, t.s3.p2, p);
+  bool lt1 = !right_turn(t.s1.p1, t.s1.p2, p);
+  bool lt2 = !right_turn(t.s2.p1, t.s2.p2, p);
+  bool lt3 = !right_turn(t.s3.p1, t.s3.p2, p);
   // cout << t.s1.p1 << ", " << t.s1.p2 << ", " << p << endl;
   // cout << t.s2.p1 << ", " << t.s2.p2 << ", " << p << endl;
   // cout << t.s3.p1 << ", " << t.s3.p2 << ", " << p << endl;
-  cout << lt1 << " " << lt2 << " " << lt3 << endl;
+  // cout << lt1 << " " << lt2 << " " << lt3 << endl;
   return lt1 && lt2 && lt3;
 }
 
 bool contained_in(segment& s, triangle& t) {
   assert(normal(t));
   bool result = within(s.p1, t) & within(s.p2, t);
-  cout << result << endl;
+  // cout << result << endl;
   return result;
 }
 
 
 int solve(int m, int n, vector<segment>& legs, vector<triangle>& triangles) {
-  for (triangle t: triangles) { normalise(t); }
-  for (triangle t: triangles) { assert(normal(t)); }
+  for (triangle& t: triangles) { normalise(t); }
+  for (triangle& t: triangles) { assert(normal(t)); }
 
   int segs = m - 1;
   int min_dist = INT_MAX;
