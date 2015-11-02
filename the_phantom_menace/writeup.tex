@@ -1,0 +1,20 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{A nice little trick}{n^3}{m}
+    This problem is modeled as a maxflow problem.
+
+    For each astronomical object, we create two nodes in the graph model.
+    One for the incoming links and on for the outgoing links.
+    We then create an edge between them with capacity one that models that one ship can block paths through this node.
+    Every link is modeled as an edge with capacity one.
+    Every starting position gets an edge from the source and every destination gets an edge to the sink.
+    The maxflow is then the result we're looking for.
+
+    \code{main}{53}{94}
+  \end{solution}
+\end{solutions}
+
+\end{document}

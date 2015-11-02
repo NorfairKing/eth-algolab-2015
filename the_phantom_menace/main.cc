@@ -44,12 +44,15 @@ struct EdgeAdder {
   ReverseEdgeMap  &rev_edge;
 };
 
-struct lnk { // Somehow I can't name this link without getting compile-errors
+// Somehow I can't name this link without getting compile-errors
+struct lnk {
   int from;
   int to;
 };
 
-int solve(int n, int m, int s, int d, vector<lnk>& links, vector<int>& starts, vector<int>& ends){
+int solve(int n, int m, int s, int d
+    , vector<lnk>& links
+    , vector<int>& starts, vector<int>& ends){
   Graph g;
   EdgeCapacityMap capacity = get(edge_capacity, g);
   ReverseEdgeMap rev_edge = get(edge_reverse, g);
@@ -65,8 +68,6 @@ int solve(int n, int m, int s, int d, vector<lnk>& links, vector<int>& starts, v
     outs.push_back(outgoing);
 
     ea.addEdge(incoming, outgoing, 1);
-
-    // cout << incoming << ", " << outgoing << endl;
   }
 
   for (int i = 0; i < m; ++i) {
@@ -74,8 +75,6 @@ int solve(int n, int m, int s, int d, vector<lnk>& links, vector<int>& starts, v
     Vertex f = outs[l.from];
     Vertex t = ins[l.to];
     ea.addEdge(f, t, 1);
-
-    // cout << f << " -> " << t << endl;
   }
 
   Vertex src = add_vertex(g);
@@ -84,12 +83,10 @@ int solve(int n, int m, int s, int d, vector<lnk>& links, vector<int>& starts, v
   for (int i = 0; i < s; ++i) {
     Vertex t = ins[starts[i]];
     ea.addEdge(src, t, 1);
-    // cout << src << " -> " << t << endl;
   }
   for (int i = 0; i < d; ++i) {
     Vertex f = outs[ends[i]];
     ea.addEdge(f, snk, 1);
-    // cout << f << " -> " << snk << endl;
   }
 
   int flow = push_relabel_max_flow(g, src, snk);
