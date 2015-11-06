@@ -3,6 +3,8 @@ pdfs=""
 for i in *; do
   if [ -d $i ] ; then
     cd $i
+
+    ../algo test
   
     if [ -f writeup.tex ] ; then
       ../algo publish
