@@ -1,7 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
-#include <queue>
+#include <stack>
 
 #include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 #include <CGAL/Delaunay_triangulation_2.h>
@@ -54,20 +54,20 @@ vector<bool> solve(int n, int m, vector<person>& infected, vector<query>& querie
 
     P query(x, y);
 
-    queue<FaceH> q;
+    stack<FaceH> s;
 
 		P nearest = t.nearest_vertex(query)->point();
 		if(squared_distance(query, nearest) < d) { continue; }
 
     FaceH startF = t.locate(query);
-    q.push(startF);
+    s.push(startF);
 
     map<FaceH, COLOR> dfs_map; // White is the default.
 
 		long min_sq_dist = 4 * d;
-    while (!q.empty()) {
-      FaceH cur = q.front();
-      q.pop();
+    while (!s.empty()) {
+      FaceH cur = s.top();
+      s.pop();
 
       if (t.is_infinite(cur)) {
         res[i] = true;
@@ -89,7 +89,7 @@ vector<bool> solve(int n, int m, vector<person>& infected, vector<query>& querie
         if (dfs_map[neighbor] == Black
             || dfs_map[neighbor] == Grey) { continue; }
 
-        q.push(neighbor);
+        s.push(neighbor);
         dfs_map[neighbor] = Grey;
       }
     }
