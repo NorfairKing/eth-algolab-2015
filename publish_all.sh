@@ -4,8 +4,10 @@ for i in *; do
   if [ -d $i ] ; then
     cd $i
   
-    ../algo publish
-    pdfs="$pdfs $i/writeup.pdf"
+    if [ -f writeup.tex ] ; then
+      ../algo publish
+      pdfs="$pdfs $i/writeup.pdf"
+    fi
 
     cd ..
   fi
