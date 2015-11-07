@@ -2,7 +2,7 @@
 \newcommand{\SUBTITLE}{The comprehensive guide}
 
 \theoremstyle{plain}
-\newtheorem{thm}{Theorem}
+\newtheorem{thm}{Theorem}[section]
 \theoremstyle{definition}
 \newmdtheoremenv{mistake}[thm]{Mistake}
 
@@ -44,3 +44,11 @@
   \end{figure}
 }
 
+\newmdtheoremenv{mathtip}[thm]{Math Tip}
+\newenvironment{matht}[1]{
+  \begin{mathtip}
+    #1
+    \newline
+}{
+\end{mathtip}
+}
