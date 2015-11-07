@@ -33,7 +33,7 @@ bool solve(int nr_students, vector<set<int>> students, int nr_chars, int min_cha
   checked_edmonds_maximum_cardinality_matching(g, &mate[0]);
   
   int size = matching_size(g, &mate[0]);
-  return size != (nr_students / 2);
+  return size < (nr_students / 2);
 }
 
 int main() {
