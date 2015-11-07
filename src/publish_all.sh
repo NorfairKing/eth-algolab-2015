@@ -4,7 +4,7 @@ for i in *; do
     cd $i
 
     if [ -f writeup.tex ] ; then
-      ../algo publish > /tmp/publish.out 2&>1
+      ../algo publish > /tmp/publish.out 2>&1
       if [[ "$?" == "0" ]] ; then
         pdfs="$pdfs $i/writeup.pdf"
       else
