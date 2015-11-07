@@ -7,14 +7,6 @@
 \usepackage{amssymb}
 \usepackage{amsthm}
 
-% a nicer font with math support
-\usepackage{libertine}
-\usepackage[libertine]{newtxmath}
-
-% to count pages
-\usepackage{lastpage}
-\usepackage{afterpage}
-
 % to get figures in the right place.
 \usepackage{float}
 
@@ -38,7 +30,13 @@
 % Voor commit in titelpagina
 \immediate\write18{git rev-parse --short HEAD > commit.tex}
 
+% For tikz (and foreach in titlepage)
 \usepackage{tikz}
+
+% For color 
+\usepackage{color}
+
+
 
 
 % For URL's

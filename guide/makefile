@@ -6,9 +6,10 @@ all: publish
 
 publish: $(GUIDE_OUT)
 
-TEXS = $(wildcard *.src)
+TEXS = $(wildcard *.tex)
+EXAMPLES = $(wildcard examples/*.cc)
 
-$(GUIDE_OUT): $(GUIDE_SRC) $(TEXS)
+$(GUIDE_OUT): $(GUIDE_SRC) $(TEXS) $(EXAMPLES)
 	latexmk -pdf -pdflatex="pdflatex -shell-escape -halt-on-error -enable-write18" $(GUIDE_SRC)
 	latexmk -c
 

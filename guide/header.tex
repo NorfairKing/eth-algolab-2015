@@ -1,2 +1,46 @@
 \newcommand{\TITLE}{Algorithms Lab}
 \newcommand{\SUBTITLE}{The comprehensive guide}
+
+\theoremstyle{plain}
+\newtheorem{thm}{Theorem}
+\theoremstyle{definition}
+\newmdtheoremenv{mistake}[thm]{Mistake}
+
+% \nointent everywhere
+\setlength\parindent{0pt}
+
+\newenvironment{mt}[1]{
+  \begin{mistake}
+    #1\\
+
+}{
+\end{mistake}
+}
+
+\newenvironment{fx}{
+  \textbf{Fix.} 
+}{
+}
+
+\usepackage{minted}
+\newcommand{\cl}[1]{\mintinline{raw}{#1}}
+\newcommand{\cc}[1]{\mintinline{c++}{#1}}
+
+\newcommand{\examplell}[3]{
+  \begin{figure}[H]
+    \centering
+    \begin{mdframed}
+      \inputminted[firstline=#2, lastline=#3]{c++}{examples/#1.cc}
+    \end{mdframed}
+  \end{figure}
+}
+
+\newcommand{\example}[1]{
+  \begin{figure}[H]
+    \centering
+    \begin{mdframed}
+      \inputminted{c++}{examples/#1.cc}
+    \end{mdframed}
+  \end{figure}
+}
+
