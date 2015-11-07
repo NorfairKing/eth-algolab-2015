@@ -4,6 +4,7 @@
 
 \usepackage{pdfpages}
 \AtBeginDocument{\includepdf[pages=-]{assignment.pdf}}
+\AtEndDocument{\newpage\inputminted[fontsize=\scriptsize]{c++}{main.cc}}
 
 % \nointent everywhere
 \setlength\parindent{0pt}
