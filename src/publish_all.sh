@@ -18,11 +18,20 @@ for i in *; do
   fi
 done
 
+txttopdf () {
+  infile="$1"
+  outfile="$2"
+  enscript "$infile" --output=- | ps2pdf - > "$outfile"
+}
+
+txttopdf makefile makefile.pdf
+txttopdf algo algo.pdf
+
 echo $pdfs
 
 RESULT="algolab-writeups-2015.pdf"
 
-cmd="pdfunite $pdfs $RESULT"
+cmd="pdfunite $pdfs algo.pdf makefile.pdf $RESULT"
 echo $cmd
 $cmd
 
