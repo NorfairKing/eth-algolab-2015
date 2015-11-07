@@ -1,14 +1,17 @@
 pdfs=""
-
 for i in *; do
   if [ -d $i ] ; then
     cd $i
 
-    ../algo test
-  
     if [ -f writeup.tex ] ; then
-      ../algo publish
-      pdfs="$pdfs $i/writeup.pdf"
+      ../algo publish > /tmp/publish.out 2&>1
+      if [[ "$?" == "0" ]] ; then
+        pdfs="$pdfs $i/writeup.pdf"
+      else
+        cat /tmp/publish.out
+      fi
+    else
+      echo "writeup for $i missing"
     fi
 
     cd ..
@@ -22,3 +25,4 @@ RESULT="algolab-writeups-2015.pdf"
 cmd="pdfunite $pdfs $RESULT"
 echo $cmd
 $cmd
+
