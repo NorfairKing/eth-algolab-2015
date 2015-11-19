@@ -13,9 +13,6 @@ print_colored_text () {
   echo -e -n "${!color_code}$text$COL_RESET"
 }
 
-
-pdfs=""
-
 nb_dirs=$(ls -1 -d */ | wc -l)
 counter="1"
 
@@ -29,16 +26,18 @@ for i in $dirs; do
   printf "%2s" $counter
   echo -n "/$nb_dirs] "
 
-  if [ -f writeup.tex ] ; then
-    ../algo publish > /tmp/publish.out 2>&1
-    if [[ "$?" == "0" ]] ; then
-      pdfs="$pdfs $i/writeup.pdf"
-    else
-      cat /tmp/publish.out
-    fi
-    print_colored_text RED "$i"
+  is=$(printf "%20s" $i)
+  echo -n "$is"
+  s=$(date +%s.%N)
+  ../algo test >/dev/null 2>&1
+  ex="$?"
+  e=$(date +%s.%N)
+  diff=$(echo "($e - $s) * 1000" | bc)
+  t=$(printf " %10.2f ms\n" "$diff")
+  if [[ "$ex" == "0" ]] ; then
+    print_colored_text GREEN "$t"
   else
-    print_colored_text GREEN "$i"
+    print_colored_text RED "$t"
   fi
   echo
 
@@ -46,19 +45,4 @@ for i in $dirs; do
 
   counter=$(($counter + 1))
 done
-
-txttopdf () {
-  infile="$1"
-  outfile="$2"
-  enscript "$infile" --output=- | ps2pdf - > "$outfile"
-}
-
-txttopdf makefile makefile.pdf > /dev/null 2>&1
-txttopdf algo algo.pdf         > /dev/null 2>&1
-
-RESULT="algolab-writeups-2015.pdf"
-
-cmd="pdfunite $pdfs algo.pdf makefile.pdf $RESULT"
-# echo $cmd
-$cmd
 

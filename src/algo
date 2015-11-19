@@ -39,12 +39,7 @@ print_colored_text () {
     color=$1
     text=$2
     color_code="COL_$color"
-    if [ "$WARNINGS" == "TRUE" ]
-    then
-        echo -e "${!color_code}$text$COL_RESET"
-    else
-        echo "$text"
-    fi
+    echo -e "${!color_code}$text$COL_RESET"
 }
 
 debug () {
@@ -95,19 +90,28 @@ run () {
 }
 
 test_solution () {
-  run
+  build
   for i in *.${OUTPUT_EXT}; do
     filename=$(basename "$i")
     extension="${filename##*.}"
     filename="${filename%.*}"
 
-    output_file="${filename}.${OUTPUT_EXT}"
-    echo
-    diff "${output_file}" "${TMP_DIR}/${output_file}"
-    echo "Diff:"
 
+    input_file="${filename}.${INPUT_EXT}"
+    output_file="${filename}.${OUTPUT_EXT}"
+
+    s=$(date +%s.%N)
+    ./${executable} < ${input_file} > ${TMP_DIR}/${output_file}
+    e=$(date +%s.%N)
+    diff=$(echo "($e - $s) * 1000" | bc)
+
+    fn=$(printf "%20s " $filename)
+    df=$(printf "%8.2f ms\n" $diff)
+    str="$fn: $df"
+
+    diff "${output_file}" "${TMP_DIR}/${output_file}"
     if [[ "$?" == "0" ]]; then
-      echo "Nothing, Yay!"
+      print_colored_text GREEN "$str"
     fi
   done
 }
