@@ -1,40 +1,43 @@
 #include <iostream>
 #include <vector>
 #include <climits>
-#include <queue>
+#include <stack>
 
-#include <boost/graph/dijkstra_shortest_paths.hpp>
+#include <boost/tuple/tuple.hpp>
+// #include <boost/graph/adjacency_matrix.hpp>
 #include <boost/graph/adjacency_list.hpp>
-#include <boost/graph/adjacency_matrix.hpp>
 #include <boost/graph/prim_minimum_spanning_tree.hpp>
-
-// #include <boost/tuple/tuple.hpp>  // tuples::ignore
 
 using namespace std;
 using namespace boost;
 
-// typedef adjacency_list<
-//   vecS,
-//   vecS,
-//   undirectedS,
-//   no_property,
-//   property<edge_weight_t, int>>                   Graph;
-typedef adjacency_matrix<
+typedef adjacency_list<
+  vecS,
+  vecS,
   undirectedS,
   no_property,
-  property<edge_weight_t, int>,
-  no_property>                                    Graph;
+  property<edge_weight_t, int>>                   Graph;
+// typedef adjacency_matrix<
+//   undirectedS,
+//   no_property,
+//   property<edge_weight_t, int>,
+//   no_property>                                    Graph;
 typedef graph_traits<Graph>::vertex_descriptor    Vertex;
 typedef graph_traits<Graph>::edge_descriptor      Edge;
-typedef graph_traits<Graph>::edge_iterator        EdgeIt;
+typedef graph_traits<Graph>::out_edge_iterator    OutEdgeIt;
 typedef property_map<Graph, edge_weight_t>::type  WeightMap;
 
-enum color { WHITE, GRAY, BLACK };
+struct node {
+  Vertex v;
+  node* parent;
+  int heaviest;
+};
 
 int solve(int n, int i, vector<vector<int>> dists) {
   Graph g(n);
   WeightMap ws = get(edge_weight, g);
 
+  // Add all possible edges. (it's a clique!)
   for (int j = 0; j < n - 1; ++j) {
     for (int k = 0; k < n - j - 1; ++k) {
       Edge e; bool success;
@@ -44,12 +47,16 @@ int solve(int n, int i, vector<vector<int>> dists) {
     }
   }
 
+  // Find the minimum spanning tree
   vector<Vertex> p(n);
   prim_minimum_spanning_tree(g, &p[0]);
-  for (int j = 0; j < n; ++j) {
-    cout << j << ": " << p[j] << endl;
-  }
-  cout << endl;
+
+  // for (int j = 0; j < n; ++j) {
+  //   cout << j << ": " << p[j] << endl;
+  // }
+  // cout << endl;
+
+  vector<vector<int>> neighbors(n); // at mosst 2 neighbors of course.
 
   int total_weight = 0;
   vector<vector<int>> weight(n, vector<int>(n, 0));
@@ -62,43 +69,97 @@ int solve(int n, int i, vector<vector<int>> dists) {
 
     weight[from][to] = weight[to][from] = ws[e];
     total_weight += ws[e];
+
+    neighbors[from].push_back(to);
+    neighbors[to].push_back(from);
   }
+  
+  // for (int i = 0; i < n; ++i) {
+  //   int m = neighbors[i].size();
+  //   cout << i << ": ";
+  //   for (int j = 0; j < m; ++j) {
+  //     cout << neighbors[i][j] << " ";
+  //   }
+  //   cout << endl;
+  // }
 
   // Add an edge that is not on the MST
   // Then remove the heaviest edge on the cycle that was just formed.
   Edge adding;
   bool found = false;
-  for (int from = 0; from < n; ++from) {
-    for (int to = from + 1; to < n; ++to) {
+  for (int from = 0; from < n && !found; ++from) {
+    for (int to = from + 1; to < n && !found; ++to) {
       int pf = p[from];
       int pt = p[to];
       if (to == pf || from == pt) { continue; } // Already in the tree.
       bool success;
       tie(adding, success) = edge(from, to, g);
       if (!success) { continue; }
-      cout << from << " <> " << to << endl;
+      // cout << from << " <> " << to << endl;
       total_weight += ws[adding];
       found = true;
-      break;
     }
   }
   if (!found) { return total_weight; }
 
+  stack<node*> q;
+  Vertex sv = source(adding, g);
+  node start;
+  start.v = sv;
+  start.parent = NULL;
+  start.heaviest = 0;
+
   // BFS to find the cycle from target to itsself
   // Keep the largest weight on it.
-  vector<color> visited(n, WHITE);
-  vector<vector<bool>> taken(n, vector<bool>(n, false));
 
-  std::queue<Vertex> q;
-  Vertex start = source(adding, g);
-  q.push(start);
-
-  while (!q.empty()) {
-    Vertex cur = q.front();
+  q.push(&start);
+  assert(q.size() == 1);
+  
+  bool cycle = false;
+  int heaviest = 0;
+  while (!cycle) {
+    node* cur = q.top();
     q.pop();
 
-    cout << "cur: " << cur << endl;
+    Vertex from = cur->v;
+    // cout << "from: " << from << endl;
+    // if (cur->parent != NULL) {
+    //   cout << "parent: " << cur->parent->v << endl;
+    //   if (cur->parent->parent != NULL) {
+    //     cout << "parent of parent: " << cur->parent->parent->v << endl;
+    //   }
+    // }
+
+    // if (cur->parent != NULL) {
+    //   assert(cur->parent->v != from);
+    // }
+
+    vector<int>& ns = neighbors[from];
+    for (auto it = ns.begin(); it < ns.end(); ++it) {
+      Vertex to = *it;
+
+      // cout << "to: " << to << endl;
+
+      if (to == target(adding, g)) {
+        // cout << "found cycle" << endl;
+        cycle = true;
+        heaviest = max(cur->heaviest, weight[from][to]);
+        break;
+      }
+
+      if (from == to) { continue; }
+      if (cur->parent != NULL && to == cur->parent->v) { continue; } // Don't go back without a loop.
+
+      node* n = new node;
+      n->v = to;
+      n->parent = cur;
+      n->heaviest = max(cur->heaviest, weight[from][to]);
+      q.push(n);
+    }
   }
+
+  // cout << "heaviest: " << heaviest << endl;
+  total_weight -= heaviest;
 
   // vector<vector<bool>> taken(n, vector<bool>(n, false));
   // vector<vector<int>> weight(n, vector<int>(n, 0));
@@ -158,9 +219,6 @@ int solve(int n, int i, vector<vector<int>> dists) {
   //   }
   // }
 
-
-
-
   return total_weight;
 }
 
@@ -180,6 +238,5 @@ int main() {
       }
     }
     cout << solve(n, i, ds) << endl;
-  cout << endl;
   }
 }

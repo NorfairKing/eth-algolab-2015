@@ -86,6 +86,11 @@ bool solve(int a, int s, int b, int e,
     vector<spoint>& spoints,
     vector<hunter>& hunters) {
 
+  int total_density = 0;
+  for (int j = 0; j < a; ++j) {
+    total_density += particles[j].d;
+  }
+
   // Build Delaunay Triangulation of hunters' locations
   vector<P> bhs;
   for (int i = 0; i < b; ++i) {
@@ -100,7 +105,7 @@ bool solve(int a, int s, int b, int e,
   // For each shooting point, find the maximum radius that a blast can have/
   vector<long> maxsqradius(s, LONG_MAX);
   if (b > 0) { // No bounty hunters, no closest ones. Would otherwise segfault
-    for (int i = 0; i < a; ++i) {
+    for (int i = 0; i < s; ++i) {
       int x = spoints[i].x;
       int y = spoints[i].y;
       P q(x, y);
@@ -108,15 +113,18 @@ bool solve(int a, int s, int b, int e,
       maxsqradius[i] = to_double(squared_distance(q, nearest));
     }
   }
-  
+
   Graph g(a + s);
   EdgeCapacityMap capacity = get(edge_capacity, g);
   EdgeWeightMap weight = get(edge_weight, g);
   ReverseEdgeMap rev_edge = get(edge_reverse, g);
   EdgeAdder ea(g, capacity, weight, rev_edge);
           
+  Vertex src0 = add_vertex(g);
   Vertex src = add_vertex(g);
   Vertex snk = add_vertex(g);
+
+  ea.addEdge(src0, src, total_density, 0);
 
   // Edges from the source to every shooting point with unlimited capacity and cost 0.
   for (int i = 0; i < s; ++i) {
@@ -151,17 +159,13 @@ bool solve(int a, int s, int b, int e,
   }
 
   // Find flow and cost
-  int flow = push_relabel_max_flow(g, src, snk);
+  int flow = push_relabel_max_flow(g, src0, snk);
   cycle_canceling(g);
   long cost = find_flow_cost(g);
 
-  int total_density = 0;
-  for (int j = 0; j < a; ++j) {
-    total_density += particles[j].d;
-  }
 
-  cout << "flow: " << flow << ", density: " << total_density << endl;;
-  cout << "cost: " << cost << ", energy: " << e << endl;
+  // cout << "flow: " << flow << ", density: " << total_density << endl;;
+  // cout << "cost: " << cost << ", energy: " << e << endl;
   
   return flow == total_density && cost <= e;
 }
