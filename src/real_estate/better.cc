@@ -25,7 +25,7 @@ typedef graph_traits<Graph>::edge_descriptor                Edge;
 typedef graph_traits<Graph>::out_edge_iterator              OutEdgeIt;
 
 struct EdgeAdder {
-  EdgeAdder(Graph & G, EdgeCapacityMap &capacity, EdgeWeightMap &weight, ReverseEdgeMap &rev_edge)
+  EdgeAdder(Graph & G, EdgeCapacityMap &capacity, EdgeWeightMap &weight, ReverseEdgeMap &rev_edge) 
     : G(G), capacity(capacity), weight(weight), rev_edge(rev_edge) {}
 
   void addEdge(int u, int v, long c, long w) {
@@ -53,14 +53,6 @@ pair<int, int> solve(int n, int m, int s,
 
   int t = n + m;
 
-  // Find out what the maximum bid was, this will help with complexity later.
-  int maxbid = 0;
-  for (int i = 0; i < n; ++i) {
-    for (int j = 0; j < m; ++j) {
-      maxbid = max(maxbid, bids[i][j]);
-    }
-  }
-
   Graph g(t);
   EdgeCapacityMap capacity = get(edge_capacity, g);
   EdgeWeightMap weight = get(edge_weight, g);
@@ -84,8 +76,7 @@ pair<int, int> solve(int n, int m, int s,
   // buyer to house
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < m; ++j) {
-      // We add maxbid to get something positive
-      ea.addEdge(i, j + n, 1, maxbid - bids[i][j]); // cap 1 cost minus the bid
+      ea.addEdge(i, j + n, 1, -bids[i][j]); // cap 1 cost minus the bid
     }
   }
 
@@ -101,13 +92,12 @@ pair<int, int> solve(int n, int m, int s,
 
   // maximum flow = most houses sold (houses can only make profit)
   int flow = push_relabel_max_flow(g, src, snk);
-  successive_shortest_path_nonnegative_weights(g, src, snk);
+  cycle_canceling(g);
   int cost = find_flow_cost(g);
-  // For every unit of flow, one time maxbid will be added to the cost.
-  // minimum cost = negative the maximum profit plus flow * maxbid
+  // minimum cost = negative the maximum profit
 
 
-  return make_pair(flow, flow * maxbid - cost);
+  return make_pair(flow, -cost);
 }
 
 int main() {
