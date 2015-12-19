@@ -3,12 +3,13 @@
 #include <climits>
 #include <algorithm>
 #include <deque>
-#include <CGAL/Exact_predicates_exact_constructions_kernel.h>
+#include <CGAL/Exact_predicates_inexact_constructions_kernel.h>
 
 using namespace std;
 using namespace CGAL;
 
-typedef Exact_predicates_exact_constructions_kernel K;
+// Inexact constructions doubles the speed. Otherwise we can't get maximum grade!
+typedef Exact_predicates_inexact_constructions_kernel K;
 typedef K::Point_2 P;
 
 struct segment {
@@ -68,6 +69,7 @@ int solve(int m, int n, vector<segment>& legs, vector<triangle>& triangles) {
   int segs = m - 1;
 
   vector<vector<int>> covered(n); // Key: triangle, Value: covered legs
+  // O(nm)
   for (int i = 0; i < n; ++i) {
     for (int j = 0; j < segs; ++j) {
       if (contained_in(legs[j], triangles[i])) {
@@ -85,6 +87,7 @@ int solve(int m, int n, vector<segment>& legs, vector<triangle>& triangles) {
   int j = 0;
 
   bool state = true; // True is looking right, false is taking left.
+  // O(n^2)
   while (true) {
     if (j > i) { state = true; }
     if (j >= n) { break; }
@@ -99,6 +102,7 @@ int solve(int m, int n, vector<segment>& legs, vector<triangle>& triangles) {
 
       // The new triangle added is triangle i.
       int nr_covers = covered[i].size();
+      // O(m)
       for (int k = 0; k < nr_covers; ++k) {
         int leg = covered[i][k];
 
@@ -112,6 +116,7 @@ int solve(int m, int n, vector<segment>& legs, vector<triangle>& triangles) {
     } else {
       // The triangle removed is triangle j.
       int nr_covers = covered[j].size();
+      // O(m)
       for (int k = 0; k < nr_covers; ++k) {
         int leg = covered[j][k];
 
