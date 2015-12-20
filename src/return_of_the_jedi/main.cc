@@ -56,7 +56,7 @@ int solve(int n, int i, vector<vector<int>> dists) {
   // }
   // cout << endl;
 
-  vector<vector<int>> neighbors(n); // at mosst 2 neighbors of course.
+  vector<vector<int>> neighbors(n); // at most 2 neighbors of course.
 
   int total_weight = 0;
   vector<vector<int>> weight(n, vector<int>(n, 0));
@@ -73,7 +73,7 @@ int solve(int n, int i, vector<vector<int>> dists) {
     neighbors[from].push_back(to);
     neighbors[to].push_back(from);
   }
-  
+
   // for (int i = 0; i < n; ++i) {
   //   int m = neighbors[i].size();
   //   cout << i << ": ";
@@ -85,141 +85,97 @@ int solve(int n, int i, vector<vector<int>> dists) {
 
   // Add an edge that is not on the MST
   // Then remove the heaviest edge on the cycle that was just formed.
-  Edge adding;
-  bool found = false;
-  for (int from = 0; from < n && !found; ++from) {
-    for (int to = from + 1; to < n && !found; ++to) {
+  // Keep the best of the resulting trees.
+
+  vector<Edge> additions;
+
+  for (int from = 0; from < n; ++from) {
+    for (int to = from + 1; to < n; ++to) {
       int pf = p[from];
       int pt = p[to];
       if (to == pf || from == pt) { continue; } // Already in the tree.
-      bool success;
+
+      Edge adding; bool success;
       tie(adding, success) = edge(from, to, g);
-      if (!success) { continue; }
+      assert(success); // All possible edges should be in the graph because it's a clique.
+
+      additions.push_back(adding);
       // cout << from << " <> " << to << endl;
-      total_weight += ws[adding];
-      found = true;
+      // total_weight += ws[adding];
     }
   }
-  if (!found) { return total_weight; }
 
-  stack<node*> q;
-  Vertex sv = source(adding, g);
-  node start;
-  start.v = sv;
-  start.parent = NULL;
-  start.heaviest = 0;
+  int minweight = INT_MAX;
 
-  // BFS to find the cycle from target to itsself
-  // Keep the largest weight on it.
+  int en = additions.size();
+  for (int ei = 0; ei < en; ++ei) {
+    Edge adding = additions[ei];
 
-  q.push(&start);
-  assert(q.size() == 1);
-  
-  bool cycle = false;
-  int heaviest = 0;
-  while (!cycle) {
-    node* cur = q.top();
-    q.pop();
+    int w = total_weight +  ws[adding];
 
-    Vertex from = cur->v;
-    // cout << "from: " << from << endl;
-    // if (cur->parent != NULL) {
-    //   cout << "parent: " << cur->parent->v << endl;
-    //   if (cur->parent->parent != NULL) {
-    //     cout << "parent of parent: " << cur->parent->parent->v << endl;
-    //   }
-    // }
+    stack<node*> q;
+    Vertex sv = source(adding, g);
+    node start;
+    start.v = sv;
+    start.parent = NULL;
+    start.heaviest = 0;
 
-    // if (cur->parent != NULL) {
-    //   assert(cur->parent->v != from);
-    // }
+    // BFS to find the cycle from target to itsself
+    // Keep the largest weight on it.
 
-    vector<int>& ns = neighbors[from];
-    for (auto it = ns.begin(); it < ns.end(); ++it) {
-      Vertex to = *it;
+    q.push(&start);
+    assert(q.size() == 1);
 
-      // cout << "to: " << to << endl;
+    bool cycle = false;
+    int heaviest = 0;
+    while (!cycle) {
+      node* cur = q.top();
+      q.pop();
 
-      if (to == target(adding, g)) {
-        // cout << "found cycle" << endl;
-        cycle = true;
-        heaviest = max(cur->heaviest, weight[from][to]);
-        break;
+      Vertex from = cur->v;
+      // cout << "from: " << from << endl;
+      // if (cur->parent != NULL) {
+      //   cout << "parent: " << cur->parent->v << endl;
+      //   if (cur->parent->parent != NULL) {
+      //     cout << "parent of parent: " << cur->parent->parent->v << endl;
+      //   }
+      // }
+
+      // if (cur->parent != NULL) {
+      //   assert(cur->parent->v != from);
+      // }
+
+      vector<int>& ns = neighbors[from];
+      for (auto it = ns.begin(); it < ns.end(); ++it) {
+        Vertex to = *it;
+
+        // cout << "to: " << to << endl;
+
+        if (to == target(adding, g)) {
+          // cout << "found cycle" << endl;
+          cycle = true;
+          heaviest = max(cur->heaviest, weight[from][to]);
+          break;
+        }
+
+        if (from == to) { continue; }
+        if (cur->parent != NULL && to == cur->parent->v) { continue; } // Don't go back without a loop.
+
+        node* n = new node;
+        n->v = to;
+        n->parent = cur;
+        n->heaviest = max(cur->heaviest, weight[from][to]);
+        q.push(n);
       }
-
-      if (from == to) { continue; }
-      if (cur->parent != NULL && to == cur->parent->v) { continue; } // Don't go back without a loop.
-
-      node* n = new node;
-      n->v = to;
-      n->parent = cur;
-      n->heaviest = max(cur->heaviest, weight[from][to]);
-      q.push(n);
     }
+
+    // cout << "heaviest: " << heaviest << endl;
+    w -= heaviest;
+
+    minweight = std::min(minweight, w);
   }
 
-  // cout << "heaviest: " << heaviest << endl;
-  total_weight -= heaviest;
-
-  // vector<vector<bool>> taken(n, vector<bool>(n, false));
-  // vector<vector<int>> weight(n, vector<int>(n, 0));
-
-  // for (int from = 0; from < n; ++from) {
-  //   int to = p[from];
-  //   Edge e; bool success;
-  //   tie(e, success) = edge(from, to, g);
-
-  //   if (! success) { continue; } // No parent
-
-  //   // taken[min(from, to)][max(from, to)] = true;
-  //   taken[from][to] = taken[to][from] = true;
-  //   weight[from][to] = weight[to][from] = ws[e];
-  //   total_weight += ws[e];
-  // }
-
-  // cout << "vertices: " << n << endl;
-  // cout << "weight: " << total_weight << endl;
-  // for (int j = 0; j < n; ++j) {
-  //   for (int k = 0; k < n; ++k) {
-  //     cout << taken[j][k] << " ";
-  //   }
-  //   cout << endl;
-  // }
-
-  // for (int from = 0; from < n; ++from) {
-  //   for (int to = from + 1; to < n; ++to) {
-  //     if (!taken[from][to]) { continue; } // already have this one.
-  //     
-  //     Edge e; bool success;
-  //     tie(e, success) = edge(from, to, g);
-  //     assert(success);
-
-  //     cout << from << " -> " << to  << " :  " << ws[e] << endl;
-
-  //     // Find out which collumn is now empty. It's either the from or the to collumn, or both.
-  //     // If none of them would now be empty, it wouldn't be a tree.
-  //     int from_co
-  //     bool from_empty = true;
-  //     for (int k = 0; k < n; ++k) {
-  //       if (k == to) { continue; }
-  //       if (taken[k][from]) {
-  //         from_empty = false;
-  //         break;
-  //       }
-  //     }
-  //     bool to_empty = true;
-  //     for (int k = 0; k < n; ++k) {
-  //       if (k == from) { continue; }
-  //       if (taken[k][to]) {
-  //         to_empty = false;
-  //         break;
-  //       }
-  //     }
-  //     cout << "from_e: " << from_empty << "  " << "to_empty: " << to_empty << endl;
-  //   }
-  // }
-
-  return total_weight;
+  return minweight;
 }
 
 int main() {
