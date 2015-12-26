@@ -108,7 +108,7 @@ pair<int, vector<int>> solve(int n, int m, vector<limb>& limbs) {
       int to = target(*it, g);
 
       if (visited[to]) { continue; }
-      
+
       // Don't go accross the cut.
       if (res_capacity[*it] == 0) { continue; }
 

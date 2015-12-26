@@ -52,8 +52,6 @@ struct limb {
   int cost;
 };
 
-// This is a max-flow problem.
-// Any max-flow represents a min-cut. Haha, pun intended.
 pair<int, vector<int>> solve(int n, int m, vector<limb>& limbs) {
   Graph g(n);
   EdgeCapacityMap capacity = get(edge_capacity, g);
@@ -102,7 +100,7 @@ pair<int, vector<int>> solve(int n, int m, vector<limb>& limbs) {
       int to = target(*it, g);
 
       if (visited[to]) { continue; }
-      
+
       // Don't go accross the cut.
       if (res_capacity[*it] == 0) { continue; }
 
