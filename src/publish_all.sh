@@ -33,12 +33,13 @@ for i in $dirs; do
     ../algo publish > /tmp/publish.out 2>&1
     if [[ "$?" == "0" ]] ; then
       pdfs="$pdfs $i/writeup.pdf"
+      print_colored_text GREEN "$i"
     else
       cat /tmp/publish.out
+      print_colored_text RED "$i"
     fi
-    print_colored_text RED "$i"
   else
-    print_colored_text GREEN "$i"
+    print_colored_text RED "$i"
   fi
   echo
 
