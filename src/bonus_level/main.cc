@@ -64,13 +64,13 @@ int solve(int n, vector<vector<int>>& shelves) {
         // - [d + 1][x1 + 1][x2 + 1]
         //
         // In any case, p1 picks up (x1, y1) and p2 picks up (x2, y2)
-        
+
         int m = 0;
         if (in_bounds[d + 1][x1    ][x2    ]) { m = max(m, state[d + 1][x1    ][x2    ]); }
         if (in_bounds[d + 1][x1 + 1][x2    ]) { m = max(m, state[d + 1][x1 + 1][x2    ]); }
         if (in_bounds[d + 1][x1    ][x2 + 1]) { m = max(m, state[d + 1][x1    ][x2 + 1]); }
         if (in_bounds[d + 1][x1 + 1][x2 + 1]) { m = max(m, state[d + 1][x1 + 1][x2 + 1]); }
-        
+
         state[d][x1][x2] = shelves[x1][y1] + shelves[x2][y2] + m;
         if (x1 == x2 && y1 == y2) { state[d][x1][x2] -= shelves[x1][y1]; } // Don't count doubles
       }
