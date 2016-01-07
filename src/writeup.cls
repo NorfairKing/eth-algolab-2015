@@ -18,6 +18,8 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
+
+
 % Cooler section headers
 \renewcommand\thesection{S \arabic{section}:}
 
@@ -63,3 +65,7 @@
 
 % For intervals
 \usepackage{interval}
+
+% Don't load the monospace font, otherwise verbatim will be messed up.
+\usepackage[mono=false]{libertine}
+\usepackage[libertine]{newtxmath}
