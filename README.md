@@ -9,6 +9,7 @@
 Pull-requests are welcome.
 Before contributing to this project, make sure you install the git hook for the pre-commit checks:
 
+Using [Super User Spark](https://github.com/NorfairKing/super-user-spark):
 ```
 spark deploy hooks.sus
 ```
