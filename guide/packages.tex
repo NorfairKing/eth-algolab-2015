@@ -1,0 +1,58 @@
+% For the current filepath
+\usepackage[abspath]{currfile}
+
+% for subfiles
+\usepackage{subfiles}
+
+% for math
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+% to get figures in the right place.
+\usepackage{float}
+
+% for frames
+\usepackage{mdframed}
+
+% For syntax highlighting
+\usepackage{minted}
+
+
+% to rearrange margins
+\usepackage[left=2cm,right=2cm,top=2cm,bottom=2cm,headheight=15pt]{geometry}
+
+% Headers
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\lhead{\TITLE, \SUBTITLE}
+\rhead{\thepage}
+\cfoot{Tom Sydney Kerckhove}
+
+\renewcommand{\headrulewidth}{0.4pt}
+\renewcommand{\footrulewidth}{0.4pt}
+
+
+% Voor commit in titelpagina
+\immediate\write18{git rev-parse --short HEAD > commit.tex}
+
+% For tikz (and foreach in titlepage)
+\usepackage{tikz}
+
+% For color 
+\usepackage{color}
+
+% For a nicer font
+\usepackage[mono=false]{libertine}
+\usepackage[libertine]{newtxmath}
+
+
+% For URL's
+\usepackage{hyperref}
+
+\usepackage{pdfpages}
+
+% For intervals
+\usepackage{interval}
+

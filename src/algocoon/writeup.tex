@@ -1,0 +1,31 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{A naive solution}{?}{?}
+    This is modeled as a max-flow problem.
+    Any max-flow represents a min-cut. (pun intended)
+
+    Me any my friend can each pick any figure to start.
+    This means that we'll calculate the flow for any pair of vertices and keep the one with the maximum flow.
+    This flow will represent the situation with the smallest value accross the cut.
+
+    \code{naive}{70}{85}
+
+    Then we'll collect all the figures before the cut.
+
+    \code{naive}{87}{116}
+
+  \end{solution}
+
+  \begin{solution}{Slightly smarter cutting}{?}{?}
+    The important insight is that we're not really interested in the entire flow network, only in the cut.
+    Given any pair of vertices that are on either end of the cut we're looking for, we'll get the same cut.
+    Because a cut is by definition a partition of the vertices into two sets, this means we don't have to look at every pair of vertices but only at the pairs with a fixed vertex (let's say $0$).
+    
+    \code{main}{78}{91}
+  \end{solution}
+\end{solutions}
+
+\end{document}

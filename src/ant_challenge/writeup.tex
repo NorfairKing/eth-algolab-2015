@@ -1,0 +1,15 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{Out of the box}{se\log{e} + t}{t^2}
+    The networks of the bugs are defined to be the output of Prims algorithm.
+    In the case of distint edge weights, this is the same as the output of Kruskal's algorithm.
+    We can therefore construct the bug's networks by applying Kruskal's algorithm to each of the bug's views of the path between the trees.
+    When we combine all these minimum spanning trees in one graph, we can find the shortest path through the combined network with Dijkstra's algorithm.
+    \code{main}{30}{67}
+  \end{solution}
+\end{solutions}
+
+\end{document}

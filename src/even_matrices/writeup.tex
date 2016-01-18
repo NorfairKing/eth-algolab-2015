@@ -1,0 +1,26 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{A naive solution}{n^6}{1}
+    The naive solution is to just go over all possible quadruples and count all the even sums of the bits inbetween them.
+    \code{naive}{57}{78}
+  \end{solution}
+  
+  \begin{solution}{A better solution}{n^4}{n^2}
+    A better solution involves dynamic programming.
+    It involves dynamically precomputing the sum of all bits in the square below $(i,j)$ for every tuple $(i,j)$.
+    Checking whether the sums are even is then a constant-time operation.
+    Take care, however, the twodimensional problem requires some extra thought.
+    \code{better}{57}{91}
+  \end{solution}
+
+  \begin{solution}{A clever solution}{n^3}{n}
+    This solution re-uses the solution to the one-dimensional version of this problem.
+    Essentially we are compressing every possible pair of rows down to a single row and applying the one-dimension version to that row.
+    \code{main}{71}{84}
+  \end{solution}
+\end{solutions}
+
+\end{document}

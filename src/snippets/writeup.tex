@@ -1,0 +1,27 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{The most naive solution}{\prod_{i}m_{i}}{n}
+    The most naive solution would go through all the possible intervals of word positions and keep the smallest valid one.
+    This would require quite some complicated coding and we should therefore not even implement it.
+  \end{solution}
+
+  \begin{solution}{Datastructures}{\sum_{i}m_{i}\log{\left(\sum_{i}m_{i}\right)}}{?}
+    This solution makes use of a priority queue to go over all the words and a set to keep track of the words that are currently chosen for an interval under consideration. 
+
+    The words should be sorted by position, increasing or decreasing doesn't matter but in this case it's decreasing.
+    \code{main}{8}{20}
+
+    Another vector is used to keep track of the currently chosen position for each word.
+    Ideally we'd use a map sorted by value instead of the set and the vector but that's not easy to implement and not to be found in the standard library.
+
+    As soon as each word has been added for the first time, the loop invariant will be that the \mintinline{c++}{chosen} set contains a valid interval.
+    From then on we go over all the intervals we find and keep the range of the smallest one.
+    In every instance of the loop, the next word from the priority queue is chosen and the previous chosen position of that word is erased from the \mintinline{c++}{chosen} set.
+    \code{main}{22}{52}
+  \end{solution}
+\end{solutions}
+
+\end{document}

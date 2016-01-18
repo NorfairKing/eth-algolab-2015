@@ -1,0 +1,91 @@
+\documentclass[guide.tex]{subfiles}
+\begin{document}
+
+\section{Mathematics}
+
+\begin{matht}{Even - Odd}
+  In a binary number system, a number is even if and only if its last digit is zero.
+  Similarly: a number is odd if and only if its last digit is one.
+
+  \example{even_odd}
+\end{matht}
+
+\begin{matht}{Sum of integers}
+  \[
+    \sum_{k = 1}^{n}k = \frac{n(n+1)}{2}
+    \quad
+    \text{ and }
+    \quad
+    \sum_{k = 0}^{n - 1}k = \frac{n^2}{2}
+  \]
+\end{matht}
+
+\begin{matht}{Sum of squares}
+  \[
+    \sum_{k = 1}^{n}k^2 = \frac{n(n+1)(2n+1)}{6}
+    \quad
+    \text{ and }
+    \quad
+    \sum_{k = 0}^{n - 1}k^2 = \frac{n(2n^2+2n+1)}{6}
+  \]
+\end{matht}
+
+\begin{matht}{Sum of cubes}
+  \[
+    \sum_{k = 1}^{n}k^3 = \left(\sum_{k = 1}^{n}k\right)^2
+  \]
+\end{matht}
+
+\begin{matht}{Recursive exponentiation}
+  \[
+    a^n
+    =
+    \begin{cases}
+      1 & n = 0\\
+      a & n = 1\\
+      \left(a^{\frac{n}{2}}\right)^{2} & n \text{ even}\\
+      aa^{n-1} & n \text{ odd}\\
+    \end{cases}
+  \]
+  Recursive implementation:
+  \example{recursive_exponentiation}
+  Iterative implementation:
+  \example{iterative_exponentiation}
+
+  Runtime: $O(\log(n))$, assuming multiplication is a constant-time operation.
+\end{matht}
+
+\begin{matht}{Greatest Common Divisor}
+  Facts about the greatest common divisor:
+  \begin{align*} 
+    \forall a,b \in \mathbb{N}:\ & b \ge a \Rightarrow gcd(a, b) = gcd(a, b - a)\\
+    \forall a \in \mathbb{N}:\ & gcd(a, 0) = a
+  \end{align*}
+
+  Recursive implementation:
+  \example{recursive_gcd}
+  Iterative implementation:
+  \example{iterative_gcd}
+  Using boost:
+  \example{boost_gcd}
+
+  Runtime: $O(\log(a + b))$
+\end{matht}
+
+\begin{matht}{Least Common Multiple}
+  The least common multiple can be expressed in terms of the greatest common denominator.
+  \[ lcm(a, b) = \frac{ab}{gcd(a, b)} \]
+
+  \example{lcm_ito_gcd}
+  Using boost:
+  \example{boost_lcm}
+
+  Runtime: $O(\log(a + b))$
+\end{matht}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

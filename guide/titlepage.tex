@@ -1,0 +1,30 @@
+\begin{titlepage}
+  \thispagestyle{empty}
+  \hbox{
+    \hspace*{0.05\textwidth}
+    \foreach \i in {1,...,4} {
+      \rule{\i pt}{\textheight}
+      \hspace{\i pt}
+    }
+    \hspace*{0.05\textwidth}
+    \parbox[b]{0.75\textwidth}{
+
+      {\noindent\Huge\bfseries \TITLE}\\
+      [1\baselineskip]
+      {\large \textit{\SUBTITLE}}\\[4\baselineskip]
+      {\Large \textsc{Tom Sydney Kerckhove}}\\[2\baselineskip]
+      {\normalsize with special thanks to:}\\\\
+      {\large \textsc{Mohit Dubey}}\\[2\baselineskip]
+
+      \begin{large}
+        \begin{tabular}{l l}
+          Started & November 6, 2015\\
+          Compiled & \today\\
+          Commit & \input{commit.tex}\\
+        \end{tabular}
+      \end{large}
+
+      \vspace{0.5\textheight}
+    }
+  }
+\end{titlepage}

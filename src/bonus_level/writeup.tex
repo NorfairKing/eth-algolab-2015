@@ -1,0 +1,30 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{Clever Dynamic programming}{?}{?}
+    Suppose we ony needed to go one way.
+    Using some clever dynamic programming, we could calculate the best value we can get in one trip.
+    Unfortunately, we can't pick up coins twice, so this actually doesn't get us anywhere.
+
+    The first insight is that going one way twice is equivalent to going back and forth.
+    The next insight is that the way the movement is restricted actually helps.
+    It means that after every move, the player is one diagonal further.
+
+    The trick to solving this problem efficiently is to use dynamic programming and let the state reflect two runs at the same time.
+
+    We keep a dynamic programming state with three dimensions.
+    The first dimension represents the diagonal of the step: $x + y$.
+    The second dimension represents the $x$-position of the first travel.
+    The third dimension represents the $x$-position of the second travel.
+
+    Now $state[i][j][k]$ is the maximum of the sum of the coins that are picked up on both travels and the maximum of the 'adjacent' states.
+
+    \code{main}{68}{75}
+
+    $state[0][0][0]$ is then the desired result.
+  \end{solution}
+\end{solutions}
+
+\end{document}

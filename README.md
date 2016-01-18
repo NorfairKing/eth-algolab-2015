@@ -1,7 +1,27 @@
 # Algorithms Lab
 
+## Building the guide
 
-## Usage
+`make` should do the trick.
+
+## Contributing
+
+Pull-requests are welcome.
+Before contributing to this project, make sure you install the git hook for the pre-commit checks:
+
+```
+spark deploy hooks.sus
+```
+
+Or just install `script/pre_commit_test.sh` into `.git/hooks/pre-commit`
+
+## Depedencies
+
+- `enscript`
+- `latexmk`
+- `pygmentize`
+
+## Build System Usage
 
 When in the directory for a particular problem, the following command will help you.
 ```
@@ -9,10 +29,3 @@ When in the directory for a particular problem, the following command will help 
 ```
 
 This script will build, run and test the solution you want with `../algo <solution>` and `../algo publish` will compile the writeup.
-
-## Writeups
-
-A nice script has been provided to compile and collect all writeups.
-```
-./publish_all.sh
-```

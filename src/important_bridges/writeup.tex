@@ -1,0 +1,17 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{Library call}{n + m}{n + m}
+    This problem can be modeled as a graph problem where the vertices are islands and the edges bridges.
+    If the problem concerned critical islands instead of critical bridges, the solution would be the articulation points.
+    As it happens, the real solution is related.
+    The key observation is that a bridge is critical if it is alone in its biconnected component.
+
+    Luckily Boost has a function to find biconnected components.
+    \code{main}{48}{73}
+  \end{solution}
+\end{solutions}
+
+\end{document}

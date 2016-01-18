@@ -1,0 +1,15 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{Library call}{n^3}{n^2}
+    This problem can be modeled as an undirected graph problem in which vertices are students and edges represent a possible bond.
+    A possible bond is a the intersection of two sets of characteristics if the size of that intersection is greater than $f$.
+    The size of the maximum cardinality matching of this graph is strictly smaller than  $\frac{n}{2}$ if and only if there exists an optimal solution.
+    Luckily, Boost has a function that calculates the size of this matching.
+    \code{main}{13}{37}
+  \end{solution}
+\end{solutions}
+
+\end{document}

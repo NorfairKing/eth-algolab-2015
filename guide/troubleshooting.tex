@@ -1,0 +1,54 @@
+\documentclass[guide.tex]{subfiles}
+\begin{document}
+
+\section{Troubleshooting}
+{\large Common problems and mistakes}\\
+
+\begin{mt}{Not initialising variables}
+
+  While developing on your local machine, you probably don't use the optimization flags \cl{O}, \cl{O2} or \cl{Ofast}.
+  When you don't use optimization flags, the compiler sometimes sets variables to a sensible default value.
+  The judge's compiler will use an optimization flag and therefore not initialize variables for you.
+  The following snippet will then work as intended locally but fail horribly on the judge.
+
+  \example{uninitialized}
+
+  \begin{fx}
+    Initialize variables.\\
+    If you don't, annotate the declaration of the variable with a comment explaining why you didn't.
+    To catch these errors early, use the \cl{-Wuninitialized} flag.
+  \end{fx}
+\end{mt}
+
+\begin{mt}{Accidentally reusing variables}
+  \example{accidental_reuse}
+  \begin{fx}
+    Scope variables correctly.\\
+    If we had written \cc{int i = 0;} instead of \cc{i = 0;}, the compiler would have complained that \cc{i} was already defined and we would have caught the error immediately.
+  \end{fx}
+\end{mt}
+
+\begin{mt}{Mixing up variables in nested loops}
+  \example{mixing_variables}
+  \begin{fx}
+    Thing about the meaning of the loop while writing the loop.
+    Don't think about the content of the loop just yet.
+    Annotate your loops with a comment explaining their meaning.
+  \end{fx}
+\end{mt}
+
+\begin{mt}{A semicolon after a loop}
+  \example{loop_semicolon}
+  \begin{fx}
+    Always put brackets around a loop.\\
+    This wil ensurethat you check behind the loop for a semicolon.
+  \end{fx}
+\end{mt}
+
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,19 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \begin{solution}{The flow of bricks}{?}{?}
+    The problem is modeled as a max-flow problem.
+
+    Locations are represented by nodes.
+    The source will be the node that represents the leftmost location: $0$ and the sink will be the node that represents the rightmost location: $w$.
+    Every brick will represent an edge with capacity $1$ to represent the fact that it can be part of a wall.
+
+    This model would solve the problem if not for the robustness constraint.
+
+    To model the fact that any given location can only be used to house the end of a brick and the beginning of the next once, we will split every node into two and make an edge from the first to the second with capacity one.
+  \end{solution}
+\end{solutions}
+
+\end{document}

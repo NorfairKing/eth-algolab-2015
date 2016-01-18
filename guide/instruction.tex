@@ -1,0 +1,143 @@
+\documentclass[guide.tex]{subfiles}
+\begin{document}
+
+
+\section{Configuration}
+
+
+
+\section{Solving a problem}
+
+{\Huge
+
+\begin{enumerate}
+  \item Read the assignment until the formal specification.
+  \item Write the IO while reading the formal specification.
+  \item Come up with a model for the solution using the following pages.
+\end{enumerate}
+
+}
+
+\begin{itemize}
+\item Put this at every problem.
+  \newline \cc{std::ios_base::sync_with_stdio(false);}
+\end{itemize}
+\pagebreak
+
+\section{Models}
+\subsection{Greedy}
+\begin{itemize}
+  \item Make sure any local optimum is a global optimum.
+  \item Define the 'best' guess.
+\end{itemize}
+
+\subsection{Divide and conquer}
+\begin{itemize}
+  \item Define how to divide.
+  \item Define how to merge results.
+\end{itemize}
+
+\subsection{DFS}
+\begin{itemize}
+  \item Define nodes.
+  \item Define edges.
+\end{itemize}
+
+\subsection{BFS}
+\begin{itemize}
+  \item Define nodes.
+  \item Define edges.
+\end{itemize}
+
+\subsection{Minimum Spanning Tree}
+\begin{itemize}
+  \item Undirected graph.
+  \item Define nodes.
+  \item Define edges.
+  \item Define edge costs.
+\end{itemize}
+
+\subsection{Graph coloring}
+\begin{itemize}
+  \item Define nodes.
+  \item Define edges.
+  \item Define colors.
+\end{itemize}
+
+\subsection{Graph matching}
+\begin{itemize}
+  \item Define nodes.
+  \item Define edges.
+  \item A matching in a graph is a set of edges without common vertices.
+\end{itemize}
+
+\subsection{Topological sort}
+\begin{itemize}
+  \item Directed graph.
+  \item Define nodes.
+  \item Define edges.
+\end{itemize}
+
+\subsection{Linear programming}
+\begin{itemize}
+  \item Define the objective function to minimize/maximize. Both the factors and the variables.
+  \item Define the constraints.
+\end{itemize}
+
+\subsection{Network flow: Max flow}
+\begin{itemize}
+  \item Define nodes
+  \item Define edges.
+  \item Define the source and the sink.
+  \item Define flow capacity for each edge
+\end{itemize}
+
+\subsection{Network flow: Max flow/Min cost}
+\begin{itemize}
+  \item Define nodes
+  \item Define edges.
+  \item Define the source and the sink.
+  \item Define flow capacity for each edge.
+  \item Define flow cost for each edge.
+\end{itemize}
+
+\subsection{Dynamic programming}
+\begin{itemize}
+  \item Optional: Define a recursive solution with no optimization
+  \item Define the state to optimize.
+\end{itemize}
+
+\subsection{Delaunay/Voronoi}
+\begin{itemize}
+  \item Define points/sites.
+  \item Define distances
+    % What can I query quickly in voronoi/delaunay?
+\end{itemize}
+
+\subsection{Minimum enclosing shapes}
+\begin{itemize}
+  \item Define the points
+\end{itemize}
+
+\subsection{Scan}
+\begin{itemize}
+  \item Define the events
+\end{itemize}
+
+\subsection{Binary search}
+\begin{itemize}
+  \item Make sure that the collection is sorted.
+  \item Make sure that you have random access in $O(1)$ time to the collection's elements
+\end{itemize}
+
+\subsection{Shortest paths}
+\begin{itemize}
+  \item TODO
+\end{itemize}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
