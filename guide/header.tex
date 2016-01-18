@@ -62,7 +62,6 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \renewcommand{\footrulewidth}{0.4pt}
 
-
 \newcommand{\includesolution}[1]{
   \def\curdir{../src/#1}
   \includepdf[pages=-]{\curdir/assignment.pdf}
@@ -87,13 +86,13 @@
 {}
 \newenvironment{solution}[3]
 {
-  \section{#1}
+  \subsection*{#1}
   \subsection*{Time: $O\left(#2\right)$, Space: $O\left(#3\right)$}
 }
 {}
 
 % For tags
 \newcommand{\bx}[1]{ \framebox[1.1\width]{#1} }
-\newcommand{\tagged}[1]{\bx{#1}}
+\newcommand{\tagged}[1]{\index{#1}\bx{#1}}
 
 
