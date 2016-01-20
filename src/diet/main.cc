@@ -62,12 +62,12 @@ optional<double> solve(int n, int m, vector<nut>& nuts, vector<food>& foods) {
     p.set_r(    i, SMALLER);
     p.set_b(    i, nuts[i].mx);
 
-    p.set_r(m + i, LARGER);
-    p.set_b(m + i, nuts[i].mn);
+    p.set_r(n + i, LARGER);
+    p.set_b(n + i, nuts[i].mn);
 
     for (int j = 0; j < m; ++j) {
       p.set_a(j,     i, foods[j].nuts[i]);
-      p.set_a(j, m + i, foods[j].nuts[i]);
+      p.set_a(j, n + i, foods[j].nuts[i]);
     }
   }
 
