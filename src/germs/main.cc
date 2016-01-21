@@ -146,7 +146,7 @@ int main() {
     int n;
     cin >> n;
     if (n == 0) { break; }
-    
+
     int l, b, r, t;
     cin >> l >> b >> r >> t;
 

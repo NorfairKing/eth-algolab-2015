@@ -1,0 +1,17 @@
+\documentclass{writeup}
+
+\begin{document}
+
+\begin{solutions}
+  \tagged{dynamic-programming}
+  \begin{solution}{Textbook dynamic programming}{?}{?}
+    This is a typical dynamic programming problem.
+
+    The state is a matrix where the element of the $i$-th row and the $j$-th column is maximum number of coins you can get in the situation where the coins indexed from $i$ to $j$ are left.
+    The two possible previous states (from the previous turn) are $s[i][j-1]$ and $s[i+1][j]$.
+    In our own turn we maximise and in our opponents turn we minimize.
+    \code{main}{18}{34}
+  \end{solution}
+\end{solutions}
+
+\end{document}

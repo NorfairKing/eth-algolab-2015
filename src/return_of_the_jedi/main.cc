@@ -17,11 +17,6 @@ typedef adjacency_list<
   undirectedS,
   no_property,
   property<edge_weight_t, int>>                   Graph;
-// typedef adjacency_matrix<
-//   undirectedS,
-//   no_property,
-//   property<edge_weight_t, int>,
-//   no_property>                                    Graph;
 typedef graph_traits<Graph>::vertex_descriptor    Vertex;
 typedef graph_traits<Graph>::edge_descriptor      Edge;
 typedef graph_traits<Graph>::out_edge_iterator    OutEdgeIt;
@@ -51,11 +46,6 @@ int solve(int n, int i, vector<vector<int>> dists) {
   vector<Vertex> p(n);
   prim_minimum_spanning_tree(g, &p[0]);
 
-  // for (int j = 0; j < n; ++j) {
-  //   cout << j << ": " << p[j] << endl;
-  // }
-  // cout << endl;
-
   vector<vector<int>> neighbors(n); // at most 2 neighbors of course.
 
   int total_weight = 0;
@@ -73,15 +63,6 @@ int solve(int n, int i, vector<vector<int>> dists) {
     neighbors[from].push_back(to);
     neighbors[to].push_back(from);
   }
-
-  // for (int i = 0; i < n; ++i) {
-  //   int m = neighbors[i].size();
-  //   cout << i << ": ";
-  //   for (int j = 0; j < m; ++j) {
-  //     cout << neighbors[i][j] << " ";
-  //   }
-  //   cout << endl;
-  // }
 
   // Add an edge that is not on the MST
   // Then remove the heaviest edge on the cycle that was just formed.
@@ -133,26 +114,12 @@ int solve(int n, int i, vector<vector<int>> dists) {
       q.pop();
 
       Vertex from = cur->v;
-      // cout << "from: " << from << endl;
-      // if (cur->parent != NULL) {
-      //   cout << "parent: " << cur->parent->v << endl;
-      //   if (cur->parent->parent != NULL) {
-      //     cout << "parent of parent: " << cur->parent->parent->v << endl;
-      //   }
-      // }
-
-      // if (cur->parent != NULL) {
-      //   assert(cur->parent->v != from);
-      // }
 
       vector<int>& ns = neighbors[from];
       for (auto it = ns.begin(); it < ns.end(); ++it) {
         Vertex to = *it;
 
-        // cout << "to: " << to << endl;
-
         if (to == target(adding, g)) {
-          // cout << "found cycle" << endl;
           cycle = true;
           heaviest = max(cur->heaviest, weight[from][to]);
           break;
@@ -169,7 +136,6 @@ int solve(int n, int i, vector<vector<int>> dists) {
       }
     }
 
-    // cout << "heaviest: " << heaviest << endl;
     w -= heaviest;
 
     minweight = std::min(minweight, w);
