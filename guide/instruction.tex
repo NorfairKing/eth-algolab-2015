@@ -35,8 +35,6 @@ g++ -o main.bin main.cc
 \pagebreak
 
 \section{Models}
-
-% TODO order these by the part they're in.
 \subsection{Greedy}
 \begin{itemize}
   \item Make sure any local optimum is a global optimum.
@@ -49,17 +47,64 @@ g++ -o main.bin main.cc
   \item Define how to merge results.
 \end{itemize}
 
-\subsection{DFS}
-\begin{itemize}
-  \item Define nodes.
-  \item Define edges.
-\end{itemize}
-
 \subsection{BFS}
 \begin{itemize}
   \item Define nodes.
   \item Define edges.
+  \item Define what 'visiting a node' means.
 \end{itemize}
+
+Use a queue to hold vertices that still need to be visited.
+\begin{minted}{c++}
+  #include <queue>
+\end{minted}
+Use a color to represent visitness: \cc{WHITE} represents unvisited, \cc{GRAY} represens 'on the queue' and \cc{BLACK} represents 'visited'.
+If written like this, vertices will be initialized to \cc{WHITE} automatically.
+\begin{minted}{c++}
+  enum color { WHITE, GRAY, BLACK };
+\end{minted}
+This uses your own vertex representation, fill in \cc{V} with whatever you need.
+Edges are not necessarily explicitly represented
+\begin{minted}{c++}
+  vector<color> visited(nr_vertices, WHITE);
+
+  V start;
+  // Initialize start
+
+  queue<V> q;
+  q.push(start);
+  while (! q.empty()) {
+    V& cur = q.front();
+    q.pop()
+
+    // Visit q
+    for (/* all vertices that can be reached: */ V n) {
+      if (visited[n] != WHITE) { continue; }
+      q.push(n);
+      visited[n] = GRAY;
+    }
+    visited[cur] = BLACK;
+  }
+\end{minted}
+
+\subsection{DFS}
+\begin{itemize}
+  \item Define nodes.
+  \item Define edges.
+  \item Define what 'visiting a node' means.
+\end{itemize}
+
+Like BFS (see above) but with a stack:
+\begin{minted}{c++}
+  #include <stack>
+  stack<V> s; // Initialize
+  s.push(start);
+
+  V& cur = s.top() // Get top element
+  s.pop() // Remove top element
+
+  s.push(n) // Add new elements to top
+\end{minted}
 
 \subsection{Minimum Spanning Tree}
 \begin{itemize}
@@ -98,7 +143,7 @@ g++ -o main.bin main.cc
 
 \subsection{Network flow: Max flow}
 \begin{itemize}
-  \item Define nodes.
+  \item Define nodes
   \item Define edges.
   \item Define the source and the sink.
   \item Define flow capacity for each edge
@@ -106,7 +151,7 @@ g++ -o main.bin main.cc
 
 \subsection{Network flow: Max flow/Min cost}
 \begin{itemize}
-  \item Define nodes.
+  \item Define nodes
   \item Define edges.
   \item Define the source and the sink.
   \item Define flow capacity for each edge.
@@ -117,12 +162,6 @@ g++ -o main.bin main.cc
 \begin{itemize}
   \item Optional: Define a recursive solution with no optimization
   \item Define the state to optimize.
-\end{itemize}
-
-\subsection{Biconnected components \& articulation points}
-\begin{itemize}
-  \item Define nodes
-  \item Define edges.
 \end{itemize}
 
 \subsection{Delaunay/Voronoi}
