@@ -21,6 +21,16 @@
 \begin{itemize}
 \item Put this at every problem.
   \newline \cc{std::ios_base::sync_with_stdio(false);}
+\item Compile with one of these commands:
+  \newline \cl{cgal_create_cmake_script; cmake .; make}
+  \begin{minted}{raw}
+g++ -o main.bin main.cc
+  -Wall -Werror
+  -std=c++11
+  -lm
+  -lboost_system -lboost_graph -lboost_thread
+  -lCGAL -lgmp -lmpfr -frounding-math -lCGAL_Core
+  \end{minted}
 \end{itemize}
 \pagebreak
 
@@ -142,6 +152,56 @@
 \begin{itemize}
   \item TODO
 \end{itemize}
+
+\section{These snippets may come in handy}
+
+\subsection{Floor and Ceil: regular}
+\begin{minted}{c++}
+double floor_to_double(const K::FT& x) {
+  double a = std::floor(CGAL::to_double(x));
+  while (a > x) a -= 1;
+  while (a+1 <= x) a += 1;
+  return a;
+}
+\end{minted}
+
+\begin{minted}{c++}
+double ceil_to_double(const K::FT& x) {
+  double a = std::ceil(CGAL::to_double(x));
+  while (a < x) a += 1;
+  while (a-1 >= x) a -= 1;
+  return a;
+}
+\end{minted}
+
+\subsection{Floor and Ceil: Sqrt}
+\begin{minted}{c++}
+double ceilsqrt(const K::FT &x) {
+  const K::FT sqrtx = sqrt(x); // exact
+  double a = floor(CGAL::to_double(sqrtx)); // not
+  while (a > sqrtx) a -= 1; while (a < sqrtx) a += 1;
+  return a;
+}
+\end{minted}
+
+\begin{minted}{c++}
+double floorsqrt(const K::FT& x) {
+  const K::FT sqrtx = sqrt(x); // exact
+  double a = std::floor(CGAL::to_double(sqrtx));
+  while (a > sqrtx) a -= 1; while (a + 1 <= sqrtx) a += 1;
+  return a;
+}
+\end{minted}
+
+
+\begin{minted}{c++}
+
+\end{minted}
+
+
+\begin{minted}{c++}
+
+\end{minted}
 
 \end{document}
 
