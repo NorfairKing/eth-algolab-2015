@@ -1,23 +1,23 @@
 \BOOKMARK [1][-]{section.1}{Configuration}{}% 1
-\BOOKMARK [1][-]{section.2}{Solving a problem}{}% 2
-\BOOKMARK [1][-]{section.3}{Models}{}% 3
-\BOOKMARK [2][-]{subsection.3.1}{Greedy}{section.3}% 4
-\BOOKMARK [2][-]{subsection.3.2}{Divide and conquer}{section.3}% 5
-\BOOKMARK [2][-]{subsection.3.3}{BFS}{section.3}% 6
-\BOOKMARK [2][-]{subsection.3.4}{DFS}{section.3}% 7
-\BOOKMARK [2][-]{subsection.3.5}{Minimum Spanning Tree}{section.3}% 8
-\BOOKMARK [2][-]{subsection.3.6}{Graph coloring}{section.3}% 9
-\BOOKMARK [2][-]{subsection.3.7}{Graph matching}{section.3}% 10
-\BOOKMARK [2][-]{subsection.3.8}{Topological sort}{section.3}% 11
-\BOOKMARK [2][-]{subsection.3.9}{Linear programming}{section.3}% 12
-\BOOKMARK [2][-]{subsection.3.10}{Network flow: Max flow}{section.3}% 13
-\BOOKMARK [2][-]{subsection.3.11}{Network flow: Max flow/Min cost}{section.3}% 14
-\BOOKMARK [2][-]{subsection.3.12}{Dynamic programming}{section.3}% 15
-\BOOKMARK [2][-]{subsection.3.13}{Delaunay/Voronoi}{section.3}% 16
-\BOOKMARK [2][-]{subsection.3.14}{Minimum enclosing shapes}{section.3}% 17
-\BOOKMARK [2][-]{subsection.3.15}{Scan}{section.3}% 18
-\BOOKMARK [2][-]{subsection.3.16}{Binary search}{section.3}% 19
-\BOOKMARK [2][-]{subsection.3.17}{Shortest paths}{section.3}% 20
+\BOOKMARK [2][-]{subsection.1.1}{Vim}{section.1}% 2
+\BOOKMARK [1][-]{section.2}{Solving a problem}{}% 3
+\BOOKMARK [1][-]{section.3}{Models}{}% 4
+\BOOKMARK [2][-]{subsection.3.1}{Greedy}{section.3}% 5
+\BOOKMARK [2][-]{subsection.3.2}{Divide and conquer}{section.3}% 6
+\BOOKMARK [2][-]{subsection.3.3}{Dynamic programming}{section.3}% 7
+\BOOKMARK [2][-]{subsection.3.4}{Scan}{section.3}% 8
+\BOOKMARK [2][-]{subsection.3.5}{Binary search}{section.3}% 9
+\BOOKMARK [2][-]{subsection.3.6}{BFS}{section.3}% 10
+\BOOKMARK [2][-]{subsection.3.7}{DFS}{section.3}% 11
+\BOOKMARK [2][-]{subsection.3.8}{Linear/Quadratic programming}{section.3}% 12
+\BOOKMARK [2][-]{subsection.3.9}{Minimum Spanning Tree}{section.3}% 13
+\BOOKMARK [2][-]{subsection.3.10}{Graph matching}{section.3}% 14
+\BOOKMARK [2][-]{subsection.3.11}{Topological sort}{section.3}% 15
+\BOOKMARK [2][-]{subsection.3.12}{Network flow: Max flow}{section.3}% 16
+\BOOKMARK [2][-]{subsection.3.13}{Network flow: Max flow/Min cost}{section.3}% 17
+\BOOKMARK [2][-]{subsection.3.14}{Delaunay/Voronoi}{section.3}% 18
+\BOOKMARK [2][-]{subsection.3.15}{Minimum enclosing shapes}{section.3}% 19
+\BOOKMARK [2][-]{subsection.3.16}{Shortest paths}{section.3}% 20
 \BOOKMARK [1][-]{section.4}{These snippets may come in handy}{}% 21
 \BOOKMARK [2][-]{subsection.4.1}{Floor and Ceil: regular}{section.4}% 22
 \BOOKMARK [2][-]{subsection.4.2}{Floor and Ceil: Sqrt}{section.4}% 23

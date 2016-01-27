@@ -58,15 +58,35 @@ g++ -o main.bin main.cc
 
 \section{Models}
 \subsection{Greedy}
+
 \begin{itemize}
   \item Make sure any local optimum is a global optimum.
-  \item Define the 'best' guess.
+  \item Define the locally optimal choice.
 \end{itemize}
 
 \subsection{Divide and conquer}
 \begin{itemize}
   \item Define how to divide.
-  \item Define how to merge results.
+  \item Define how to solve the simplest base-case.
+  \item Define how to merge the results.
+\end{itemize}
+
+\subsection{Dynamic programming}
+\begin{itemize}
+  \item Optional: Define a recursive solution with no optimization
+  \item Define the state to optimize.
+\end{itemize}
+
+\subsection{Scan}
+\begin{itemize}
+  \item Define the events
+	\item Make sure you can go over them without ever considering the same event twice.
+\end{itemize}
+
+\subsection{Binary search}
+\begin{itemize}
+  \item Make sure that the collection is sorted.
+  \item Make sure that you have random access in $O(1)$ time to the collection's elements
 \end{itemize}
 
 \subsection{BFS}
@@ -128,19 +148,172 @@ Like BFS (see above) but with a stack:
   s.push(n) // Add new elements to top
 \end{minted}
 
-\subsection{Minimum Spanning Tree}
+\subsection{Linear/Quadratic programming}
+\begin{minted}{c++}
+  #include <CGAL/basic.h>
+  #include <CGAL/QP_models.h>
+  #include <CGAL/QP_functions.h>
+
+  using namespace CGAL;
+
+  #ifdef CGAL_USE_GMP
+  #include <CGAL/Gmpz.h>
+  typedef Gmpz ET;
+  #else
+  #include <CGAL/MP_Float.h>
+  typedef MP_Float ET;
+  #endif
+\end{minted}
 \begin{itemize}
-  \item Undirected graph.
-  \item Define nodes.
-  \item Define edges.
-  \item Define edge costs.
+  \item Decide whether it's an integer program or a real-valued program:
+  \begin{itemize}
+    \item Integer (most of the time)
+\begin{minted}{c++}
+  typedef Quadratic_program<int> Program;
+  typedef Quadratic_program_solution<ET> Solution;
+\end{minted}
+    \item Real-valued
+\begin{minted}{c++}
+  typedef Quadratic_program<ET>                       Program;
+  typedef Quadratic_program_solution<ET>              Solution;
+\end{minted}
+  \end{itemize}
+  \item Define the quadratic program
+\begin{minted}{c++}
+    // Always a mizimization
+    Program qp(SMALLER // Default constraint
+      , true // Whether or not to obey the lower bound
+      , 0 // Lower bound for variables
+      , false // Whether or not to obey the upper bound
+      , 0); // Upper bound
+\end{minted}
+  \item Define the variables and their bounds.
+\begin{minted}{c++}
+  const int X = 0; 
+  const int Y = 1;
+  // Obey upper bound of 4 for variable y
+  qp.set_u(Y, true, 4);
+  // Obey lower bound of 1 for variable y
+  qp.set_u(Y, true, 1);
+\end{minted}
+  \item Define the objective function to minimize/maximize.
+  \begin{itemize}
+    \item  Define the constant
+\begin{minted}{c++}
+  qp.set_c0(64);                                          // +64
+\end{minted}
+    \item  Define the linear factors
+\begin{minted}{c++}
+  qp.set_c(Y, -32);                                       // -32y
+\end{minted}
+    \item Define the quadratic factors
+\begin{minted}{c++}
+  // Watch out: specify double of quadratic factors
+  qp.set_d(X, X, 2); qp.set_d (Y, Y, 8);                  // x^2 + 4 y^2
+\end{minted}
+  \end{itemize}
+  \item Define the constraints. The second argument is the constraint number, make sure these are uniquely used.
+\begin{minted}{c++}
+  qp.set_a(X, 0,  1);
+  qp.set_a(Y, 0, 1);
+  p.set_r(eq, SMALLER);
+  qp.set_b(0, 7);  //  x + y  <= 7
+
+  qp.set_a(X, 1, -1);
+  qp.set_a(Y, 1, 2);
+  p.set_r(eq, LARGER);
+  qp.set_b(1, 4);  // -x + 2y >= 4
+\end{minted}
+  \item Solve the problem
+    \begin{itemize}
+      \item Strictly linear program
+\begin{minted}{c++}
+      Solution s = CGAL::solve_linear_program(p, ET())
+\end{minted}
+      \item Quadratic program
+\begin{minted}{c++}
+      Solution s = CGAL::solve_quadratic_program(p, ET());
+\end{minted}
+    \end{itemize}
+  \item Use the solution
+\begin{minted}{c++}
+  // This is costly, make sure to turn it off to test speed.
+  s.solves_quadratic_program(p); // Tests whether the solution is valid
+  s.is_optimal() // Tests whether the solution is in fact optimal
+  s.is_unbounded() // Tests whether there exists a minimal solution
+  // Gets the objective value using the helper methed for exact types
+  floor_to_double(s.objective_value());
+\end{minted}
 \end{itemize}
 
-\subsection{Graph coloring}
+\subsection{Minimum Spanning Tree}
 \begin{itemize}
-  \item Define nodes.
+  \item Check that an undirected graph with edge weigths is a fitting model.
+
+\begin{minted}{c++}
+  #include <boost/graph/adjacency_list.hpp>
+  using namespace boost;
+
+  typedef adjacency_list<
+    vecS,
+    vecS,
+    undirectedS,
+    no_property,
+    property<edge_weight_t, int>>                   Graph;
+  typedef graph_traits<Graph>::vertex_descriptor    Vertex;
+  typedef graph_traits<Graph>::edge_descriptor      Edge;
+  typedef graph_traits<Graph>::edge_iterator        EdgeIt;
+  typedef property_map<Graph, edge_weight_t>::type  WeightMap;
+\end{minted}
+  \item Define the graph.
+\begin{minted}{c++}
+  Graph g(t);
+  WeightMap ws = get(edge_weight, g);
+\end{minted}
+  \item Define vertices.
+\begin{minted}{c++}
+  Vertex v = add_vertex(g);
+\end{minted}
   \item Define edges.
-  \item Define colors.
+\begin{minted}{c++}
+  Edge e; bool s;
+  tie(e, s) = add_edge(from, to, g);
+\end{minted}
+  \item Define edge costs.
+\begin{minted}{c++}
+  wm[ed] = edge.weight;
+\end{minted}
+  \item Compute the MST
+  \begin{itemize}
+    \item With Kruskall: (Use this one if you can.)
+\begin{minted}{c++}
+  #include <boost/graph/kruskal_min_spanning_tree.hpp>
+  vector<Edge> mst;
+  kruskal_minimum_spanning_tree(gi, back_inserter(mst));
+
+  vector<Edge>::iterator ebeg, eend = mst.end();
+
+  for (ebeg = mst.begin(); ebeg != eend; ++ebeg) {
+    *ebeg // Current edge
+    source(*ebeg, g) // Get source of the current edge
+    target(*ebeg, g) // Get target of the current edge
+  }
+\end{minted}
+    \item With Prim:
+\begin{minted}{c++}
+  #include <boost/graph/prim_minimum_spanning_tree.hpp>
+  vector<Vertex> p(n); // Predecessor map
+  prim_minimum_spanning_tree(g, &p[0]);
+
+  for (int from = 0; from < n; ++from) {
+    int to = p[from];
+    Edge e; bool success;
+    tie(e, success) = edge(from, to, g);
+
+    if (! success) { continue; } // No parent, not on the tree.
+  }
+\end{minted}
+  \end{itemize}
 \end{itemize}
 
 \subsection{Graph matching}
@@ -148,20 +321,48 @@ Like BFS (see above) but with a stack:
   \item Define nodes.
   \item Define edges.
   \item A matching in a graph is a set of edges without common vertices.
+
+\begin{minted}{c++}
+#include <boost/graph/adjacency_list.hpp>
+#include <boost/graph/max_cardinality_matching.hpp>
+
+using namespace boost;
+
+typedef adjacency_list<vecS, vecS, undirectedS> Graph;
+typedef graph_traits<Graph>::edge_descriptor Edge;
+typedef graph_traits<Graph>::vertex_descriptor Vertex;
+
+vector<Vertex> mate(v);
+checked_edmonds_maximum_cardinality_matching(g, &mate[0]);
+int size = matching_size(g, &mate[0]);
+\end{minted}
 \end{itemize}
+
 
 \subsection{Topological sort}
 \begin{itemize}
   \item Directed graph.
   \item Define nodes.
   \item Define edges.
+\begin{minted}{c++}
+  typedef adjacency_list< vecS, vecS, directedS, color_property<> > Graph;
+  typedef boost::graph_traits<Graph>::vertex_descriptor Vertex;
+
+  Graph g(n);
+  Edge e; bool s;
+  tie(e, s) = add_edge(from, to, g);
+
+  typedef std::vector<Vertex> container;
+  container c;
+  topological_sort(g, std::back_inserter(c));
+
+  cout << "A topological ordering: ";
+  for ( container::reverse_iterator ii=c.rbegin(); ii!=c.rend(); ++ii)
+    cout << index(*ii) << " ";
+  cout << endl;
+\end{minted}
 \end{itemize}
 
-\subsection{Linear programming}
-\begin{itemize}
-  \item Define the objective function to minimize/maximize. Both the factors and the variables.
-  \item Define the constraints.
-\end{itemize}
 
 \subsection{Network flow: Max flow}
 \begin{itemize}
@@ -180,11 +381,6 @@ Like BFS (see above) but with a stack:
   \item Define flow cost for each edge.
 \end{itemize}
 
-\subsection{Dynamic programming}
-\begin{itemize}
-  \item Optional: Define a recursive solution with no optimization
-  \item Define the state to optimize.
-\end{itemize}
 
 \subsection{Delaunay/Voronoi}
 \begin{itemize}
@@ -198,16 +394,6 @@ Like BFS (see above) but with a stack:
   \item Define the points
 \end{itemize}
 
-\subsection{Scan}
-\begin{itemize}
-  \item Define the events
-\end{itemize}
-
-\subsection{Binary search}
-\begin{itemize}
-  \item Make sure that the collection is sorted.
-  \item Make sure that you have random access in $O(1)$ time to the collection's elements
-\end{itemize}
 
 \subsection{Shortest paths}
 \begin{itemize}
